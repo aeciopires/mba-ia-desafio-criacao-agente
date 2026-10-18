@@ -1,0 +1,6 @@
+# Tool versions managed by mise (https://mise.jdx.dev).
+# Docker, Docker Compose and Colima are installed by the operating system, not by mise.
+[tools]
+python = "3.12.15"
+uv = "0.12.24"
+jq = "1.8.1"

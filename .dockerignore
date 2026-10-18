@@ -1,0 +1,13 @@
+.git
+.venv
+var
+.env
+gemini.yaml
+**/__pycache__
+.pytest_cache
+.ruff_cache
+docs
+tests
+observability
+scripts
+dados

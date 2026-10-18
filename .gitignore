@@ -1,3 +1,22 @@
+# Secrets
 .env
+gemini.yaml
+
+# Python
 .venv/
 __pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Runtime data (SQLite databases)
+var/
+
+# Editors / OS
+.idea/
+.DS_Store

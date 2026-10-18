@@ -1,0 +1,63 @@
+# Residencial Aurora: API + Prometheus + Grafana.
+# Host ports can be changed in .env (API_PORT, PROMETHEUS_PORT, GRAFANA_PORT).
+name: aurora
+
+services:
+  api:
+    image: aurora-api:${AURORA_VERSION:-dev}
+    build:
+      context: .
+      args:
+        AURORA_VERSION: ${AURORA_VERSION:-dev}
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Inside the container the API always listens on 8000; API_PORT only changes the host port.
+      API_PORT: "8000"
+      API_HOST: 0.0.0.0
+      AURORA_DADOS_DIR: /app/dados
+      AURORA_DB_PATH: /app/var/aurora.db
+      AURORA_SESSIONS_DB_URL: sqlite+aiosqlite:////app/var/sessions.db
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ./var:/app/var
+      - ./dados:/app/dados:ro
+    stop_grace_period: 10s
+    restart: "no"
+
+  prometheus:
+    image: prom/prometheus:v3.13.4
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    depends_on:
+      - api
+
+  grafana:
+    image: grafana/grafana:13.0.1
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/aurora-negocio.json
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  prometheus-data:
+  grafana-data:

@@ -1,0 +1,52 @@
+[project]
+name = "aurora"
+dynamic = ["version"]
+description = "Residencial Aurora virtual assistant built with Google ADK and exposed through a FastAPI API."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "google-adk[db]==2.11.0",
+    "fastapi==0.141.1",
+    "uvicorn[standard]==0.54.0",
+    "aiosqlite==0.22.1",
+    "pydantic-settings==2.16.0",
+    "prometheus-client==0.26.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "httpx==0.28.1",
+    "ruff==0.17.1",
+]
+
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "VERSION"
+pattern = "^(?P<version>[^\\s]+)\\s*$"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aurora"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+markers = [
+    "integration: tests that hit the running API and the Gemini model",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+# Long string literals (messages, SQL) are allowed; the formatter wraps code.
+ignore = ["E501"]

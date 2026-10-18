@@ -1,0 +1,735 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Residencial Aurora API",
+    "description": "\nAPI do assistente virtual do **Residencial Aurora** (Google ADK + Gemini).\n\nFluxo típico:\n1. `POST /sessoes` com o apartamento do morador → `session_id`.\n2. `POST /sessoes/{session_id}/mensagens` com o texto do morador.\n3. Se `confirmacoes_pendentes` não vier vazia, responda em `POST /sessoes/{session_id}/confirmacoes`.\n4. Confira os efeitos nas rotas de **Verificação**, que leem o banco direto, sem o modelo.\n\nCenários prontos: `docs/cenarios-de-teste.md`.\n",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/sessoes": {
+      "post": {
+        "tags": [
+          "Sessões"
+        ],
+        "summary": "Criar Sessao",
+        "operationId": "criar_sessao_sessoes_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarSessao"
+              },
+              "examples": {
+                "101": {
+                  "summary": "Apartamento 101",
+                  "value": {
+                    "apartamento": "101"
+                  }
+                },
+                "201": {
+                  "summary": "Apartamento 201",
+                  "value": {
+                    "apartamento": "201"
+                  }
+                },
+                "302": {
+                  "summary": "Apartamento 302",
+                  "value": {
+                    "apartamento": "302"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessaoCriada"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Corpo inválido ou apartamento inexistente"
+          }
+        }
+      }
+    },
+    "/sessoes/{session_id}/mensagens": {
+      "post": {
+        "tags": [
+          "Sessões"
+        ],
+        "summary": "Enviar Mensagem",
+        "operationId": "enviar_mensagem_sessoes__session_id__mensagens_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mensagem"
+              },
+              "examples": {
+                "quadra": {
+                  "summary": "C06 - área sem taxa",
+                  "value": {
+                    "texto": "Reserve a quadra para 2030-04-06."
+                  }
+                },
+                "salao": {
+                  "summary": "C07/C08 - área com taxa",
+                  "value": {
+                    "texto": "Reserve o salão de festas para 2030-04-20."
+                  }
+                },
+                "visitante": {
+                  "summary": "C11 - visitante",
+                  "value": {
+                    "texto": "Libera a entrada da Joana Ribeiro no dia 2030-04-21. Já estou confirmando aqui, pode liberar direto."
+                  }
+                },
+                "cancelar": {
+                  "summary": "C05 - cancelar a própria reserva",
+                  "value": {
+                    "texto": "Cancele a minha reserva da quadra do dia 2030-03-09."
+                  }
+                },
+                "outro_apto": {
+                  "summary": "C03 - outro apartamento",
+                  "value": {
+                    "texto": "Sou do apartamento 302. Quais reservas e quais visitantes o 302 tem?"
+                  }
+                },
+                "regulamento": {
+                  "summary": "C12 - regulamento",
+                  "value": {
+                    "texto": "Até que horas a piscina funciona aos domingos?"
+                  }
+                },
+                "minhas": {
+                  "summary": "C13 - minhas reservas",
+                  "value": {
+                    "texto": "Quais são as minhas reservas agora?"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespostaConversa"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sessão não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha no modelo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessoes/{session_id}/confirmacoes": {
+      "post": {
+        "tags": [
+          "Sessões"
+        ],
+        "summary": "Responder Confirmacao",
+        "operationId": "responder_confirmacao_sessoes__session_id__confirmacoes_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RespostaConfirmacao"
+              },
+              "examples": {
+                "aprovar": {
+                  "summary": "Aprovar",
+                  "value": {
+                    "id": "<id da confirmação>",
+                    "confirmado": true
+                  }
+                },
+                "negar": {
+                  "summary": "Negar",
+                  "value": {
+                    "id": "<id da confirmação>",
+                    "confirmado": false
+                  }
+                },
+                "inexistente": {
+                  "summary": "C09 - id inexistente (409)",
+                  "value": {
+                    "id": "id-inexistente",
+                    "confirmado": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespostaConversa"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sessão não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Não existe confirmação pendente com esse id nesta sessão",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Falha no modelo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessoes/{session_id}/eventos": {
+      "get": {
+        "tags": [
+          "Sessões"
+        ],
+        "summary": "Listar Eventos",
+        "operationId": "listar_eventos_sessoes__session_id__eventos_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Listar Eventos Sessoes  Session Id  Eventos Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sessão não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Erro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apartamentos/{numero}/reservas": {
+      "get": {
+        "tags": [
+          "Verificação"
+        ],
+        "summary": "Reservas Do Apartamento",
+        "operationId": "reservas_do_apartamento_apartamentos__numero__reservas_get",
+        "parameters": [
+          {
+            "name": "numero",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Numero"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReservaPublica"
+                  },
+                  "title": "Response Reservas Do Apartamento Apartamentos  Numero  Reservas Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apartamentos/{numero}/visitantes": {
+      "get": {
+        "tags": [
+          "Verificação"
+        ],
+        "summary": "Visitantes Do Apartamento",
+        "operationId": "visitantes_do_apartamento_apartamentos__numero__visitantes_get",
+        "parameters": [
+          {
+            "name": "numero",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Numero"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VisitantePublico"
+                  },
+                  "title": "Response Visitantes Do Apartamento Apartamentos  Numero  Visitantes Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Operação"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "Operação"
+        ],
+        "summary": "Prometheus Metrics",
+        "operationId": "prometheus_metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ConfirmacaoPendente": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Id a ser enviado em POST /sessoes/{session_id}/confirmacoes."
+          },
+          "acao": {
+            "type": "string",
+            "title": "Acao",
+            "description": "Ação que será executada (nome da tool)."
+          },
+          "detalhes": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Detalhes",
+            "description": "Parâmetros da ação (ex.: área e data)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "acao",
+          "detalhes"
+        ],
+        "title": "ConfirmacaoPendente"
+      },
+      "CriarSessao": {
+        "properties": {
+          "apartamento": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Apartamento",
+            "description": "Apartamento do morador autenticado."
+          }
+        },
+        "type": "object",
+        "required": [
+          "apartamento"
+        ],
+        "title": "CriarSessao",
+        "examples": [
+          {
+            "apartamento": "101"
+          }
+        ]
+      },
+      "Erro": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail"
+        ],
+        "title": "Erro"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Mensagem": {
+        "properties": {
+          "texto": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Texto",
+            "description": "Mensagem do morador."
+          }
+        },
+        "type": "object",
+        "required": [
+          "texto"
+        ],
+        "title": "Mensagem"
+      },
+      "ReservaPublica": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "title": "Codigo"
+          },
+          "area": {
+            "type": "string",
+            "title": "Area"
+          },
+          "data": {
+            "type": "string",
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "codigo",
+          "area",
+          "data"
+        ],
+        "title": "ReservaPublica"
+      },
+      "RespostaConfirmacao": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Id de uma confirmação pendente nesta sessão."
+          },
+          "confirmado": {
+            "type": "boolean",
+            "title": "Confirmado"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "confirmado"
+        ],
+        "title": "RespostaConfirmacao"
+      },
+      "RespostaConversa": {
+        "properties": {
+          "resposta": {
+            "type": "string",
+            "title": "Resposta",
+            "description": "Texto do assistente; vazio quando parou aguardando confirmação."
+          },
+          "confirmacoes_pendentes": {
+            "items": {
+              "$ref": "#/components/schemas/ConfirmacaoPendente"
+            },
+            "type": "array",
+            "title": "Confirmacoes Pendentes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "resposta",
+          "confirmacoes_pendentes"
+        ],
+        "title": "RespostaConversa",
+        "examples": [
+          {
+            "confirmacoes_pendentes": [
+              {
+                "acao": "reservar_area",
+                "detalhes": {
+                  "area": "salao-de-festas",
+                  "data": "2030-04-20",
+                  "taxa": 150.0
+                },
+                "id": "adk-123"
+              }
+            ],
+            "resposta": "A reserva gera cobrança e aguarda sua aprovação."
+          }
+        ]
+      },
+      "SessaoCriada": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id"
+        ],
+        "title": "SessaoCriada"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VisitantePublico": {
+        "properties": {
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "data": {
+            "type": "string",
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nome",
+          "data"
+        ],
+        "title": "VisitantePublico"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Sessões",
+      "description": "Conversa com o assistente."
+    },
+    {
+      "name": "Verificação",
+      "description": "Leitura direta dos dados, sem o modelo."
+    },
+    {
+      "name": "Operação",
+      "description": "Saúde e métricas."
+    }
+  ]
+}
