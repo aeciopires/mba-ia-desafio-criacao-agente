@@ -3,27 +3,28 @@
 <!-- TOC -->
 **Sumário**
 
-- [Objetivo](#objetivo)
-- [O ponto de partida](#o-ponto-de-partida)
-- [Tecnologias obrigatórias e restrições](#tecnologias-obrigatórias-e-restrições)
-- [Regras de negócio](#regras-de-negócio)
-- [Requisitos](#requisitos)
-  - [1. Um assistente, vários especialistas](#1-um-assistente-vários-especialistas)
-  - [2. Garantia 1: cobrança ou acesso só com confirmação](#2-garantia-1-cobrança-ou-acesso-só-com-confirmação)
-  - [3. Garantia 2: cada sessão pertence a um apartamento](#3-garantia-2-cada-sessão-pertence-a-um-apartamento)
-  - [4. Garantia 3: nada se perde no reinício](#4-garantia-3-nada-se-perde-no-reinício)
-  - [5. Garantia 4: o regulamento é consultado, não carregado](#5-garantia-4-o-regulamento-é-consultado-não-carregado)
-  - [6. Garantia 5: dois moradores, uma reserva](#6-garantia-5-dois-moradores-uma-reserva)
-  - [7. A API](#7-a-api)
-- [Contrato da API](#contrato-da-api)
-- [Fora de escopo](#fora-de-escopo)
-- [Fluxo do avaliador](#fluxo-do-avaliador)
-- [Critérios de aceite](#critérios-de-aceite)
-- [Entregável](#entregável)
-- [Dicas finais](#dicas-finais)
-<!-- /TOC -->
+- [Regra é regra: o assistente virtual do Residencial Aurora](#regra-é-regra-o-assistente-virtual-do-residencial-aurora)
+  - [Objetivo](#objetivo)
+  - [O ponto de partida](#o-ponto-de-partida)
+  - [Tecnologias obrigatórias e restrições](#tecnologias-obrigatórias-e-restrições)
+  - [Regras de negócio](#regras-de-negócio)
+  - [Requisitos](#requisitos)
+    - [1. Um assistente, vários especialistas](#1-um-assistente-vários-especialistas)
+    - [2. Garantia 1: cobrança ou acesso só com confirmação](#2-garantia-1-cobrança-ou-acesso-só-com-confirmação)
+    - [3. Garantia 2: cada sessão pertence a um apartamento](#3-garantia-2-cada-sessão-pertence-a-um-apartamento)
+    - [4. Garantia 3: nada se perde no reinício](#4-garantia-3-nada-se-perde-no-reinício)
+    - [5. Garantia 4: o regulamento é consultado, não carregado](#5-garantia-4-o-regulamento-é-consultado-não-carregado)
+    - [6. Garantia 5: dois moradores, uma reserva](#6-garantia-5-dois-moradores-uma-reserva)
+    - [7. A API](#7-a-api)
+  - [Contrato da API](#contrato-da-api)
+  - [Fora de escopo](#fora-de-escopo)
+  - [Fluxo do avaliador](#fluxo-do-avaliador)
+  - [Critérios de aceite](#critérios-de-aceite)
+  - [Entregável](#entregável)
+  - [Dicas finais](#dicas-finais)
+- [Prompts adicionais durante a criação do PLAN.md](#prompts-adicionais-durante-a-criação-do-planmd)
 
-<!-- TOC -->autoauto- [Regra é regra: o assistente virtual do Residencial Aurora](#regra-é-regra-o-assistente-virtual-do-residencial-aurora)auto  - [Objetivo](#objetivo)auto  - [O ponto de partida](#o-ponto-de-partida)auto  - [Tecnologias obrigatórias e restrições](#tecnologias-obrigatórias-e-restrições)auto  - [Regras de negócio](#regras-de-negócio)auto  - [Requisitos](#requisitos)auto    - [1. Um assistente, vários especialistas](#1-um-assistente-vários-especialistas)auto    - [2. Garantia 1: cobrança ou acesso só com confirmação](#2-garantia-1-cobrança-ou-acesso-só-com-confirmação)auto    - [3. Garantia 2: cada sessão pertence a um apartamento](#3-garantia-2-cada-sessão-pertence-a-um-apartamento)auto    - [4. Garantia 3: nada se perde no reinício](#4-garantia-3-nada-se-perde-no-reinício)auto    - [5. Garantia 4: o regulamento é consultado, não carregado](#5-garantia-4-o-regulamento-é-consultado-não-carregado)auto    - [6. Garantia 5: dois moradores, uma reserva](#6-garantia-5-dois-moradores-uma-reserva)auto    - [7. A API](#7-a-api)auto  - [Contrato da API](#contrato-da-api)auto  - [Fora de escopo](#fora-de-escopo)auto  - [Fluxo do avaliador](#fluxo-do-avaliador)auto  - [Critérios de aceite](#critérios-de-aceite)auto  - [Entregável](#entregável)auto  - [Dicas finais](#dicas-finais)auto- [Prompts adicionais durante a criação do PLAN.md](#prompts-adicionais-durante-a-criação-do-planmd)autoauto<!-- /TOC -->
+<!-- TOC -->
 
 O Residencial Aurora vai ganhar um assistente no aplicativo dos moradores. Pelo chat, cada morador reserva o salão de festas, a churrasqueira e a quadra, cancela as próprias reservas, autoriza a entrada de visitantes e tira dúvidas sobre o regulamento interno.
 

@@ -3,12 +3,14 @@
 <!-- TOC -->
 **Sumário**
 
-- [Swagger / OpenAPI](#swagger--openapi)
-- [Rotas](#rotas)
-  - [`confirmacoes_pendentes`](#confirmacoes_pendentes)
-  - [Eventos](#eventos)
-  - [Erros](#erros)
-<!-- /TOC -->
+- [API](#api)
+  - [Swagger / OpenAPI](#swagger--openapi)
+  - [Rotas](#rotas)
+    - [`confirmacoes_pendentes`](#confirmacoes_pendentes)
+    - [Eventos](#eventos)
+    - [Erros](#erros)
+
+<!-- TOC -->
 
 Contrato definido no `TASK.md`. Todas as rotas recebem e devolvem JSON. Rotas com `{session_id}` respondem `404` quando a sessão não existe.
 

@@ -3,12 +3,14 @@
 <!-- TOC -->
 **Sumário**
 
-- [1. Cobrança ou acesso só com confirmação](#1-cobrança-ou-acesso-só-com-confirmação)
-- [2. Cada sessão pertence a um apartamento](#2-cada-sessão-pertence-a-um-apartamento)
-- [3. Nada se perde no reinício](#3-nada-se-perde-no-reinício)
-- [4. O regulamento é consultado, não carregado](#4-o-regulamento-é-consultado-não-carregado)
-- [5. Dois moradores, uma reserva](#5-dois-moradores-uma-reserva)
-<!-- /TOC -->
+- [Garantias](#garantias)
+  - [1. Cobrança ou acesso só com confirmação](#1-cobrança-ou-acesso-só-com-confirmação)
+  - [2. Cada sessão pertence a um apartamento](#2-cada-sessão-pertence-a-um-apartamento)
+  - [3. Nada se perde no reinício](#3-nada-se-perde-no-reinício)
+  - [4. O regulamento é consultado, não carregado](#4-o-regulamento-é-consultado-não-carregado)
+  - [5. Dois moradores, uma reserva](#5-dois-moradores-uma-reserva)
+
+<!-- TOC -->
 
 Cada garantia é implementada em código e coberta por testes unitários (modelo falso) e de integração (Gemini real). Ponteiros de arquivo e linha: tabela **Garantias** do [README](../README.md#garantias).
 

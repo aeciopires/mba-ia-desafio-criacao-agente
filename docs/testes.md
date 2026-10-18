@@ -3,10 +3,12 @@
 <!-- TOC -->
 **Sumário**
 
-- [Unitários](#unitários)
-- [Integração](#integração)
-- [Manuais](#manuais)
-<!-- /TOC -->
+- [Testes](#testes)
+  - [Unitários](#unitários)
+  - [Integração](#integração)
+  - [Manuais](#manuais)
+
+<!-- TOC -->
 
 | Comando | O que roda | Usa o Gemini? |
 |---|---|---|
@@ -32,7 +34,7 @@ Os alvos de teste fazem `make up UP_FLAGS="-d --wait"` antes, rodam os testes, f
 Para rodar um teste específico sem subir a stack:
 
 ```bash
-uv run pytest tests/unit -k concurrent -v
+uv run python -m pytest tests/unit -k concurrent -v
 ```
 
 ## Integração

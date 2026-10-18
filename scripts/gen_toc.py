@@ -1,7 +1,12 @@
 """Insert or refresh the table of contents (TOC) at the top of every Markdown file.
 
-The TOC goes right after the first H1 title, between the markers below, and lists the
-H2 and H3 headings with GitHub-compatible anchors. Files under dados/ are never touched.
+The TOC goes right after the first H1 title, between two identical ``<!-- TOC -->``
+markers (the format used by Markdown TOC editor plugins), and lists the H1, H2 and H3
+headings with GitHub-compatible anchors, nested like the plugin output. Files under dados/ are never touched.
+
+The script is idempotent: every existing TOC block is removed before the new one is
+written, including duplicates, legacy ``<!-- /TOC -->`` blocks, and blocks collapsed into
+a single line by an editor plugin.
 
 Usage:
     uv run python scripts/gen_toc.py           # rewrite the TOCs
@@ -18,8 +23,8 @@ import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-START = "<!-- TOC -->"
-END = "<!-- /TOC -->"
+MARKER = "<!-- TOC -->"
+LEGACY_END = "<!-- /TOC -->"
 TITLE = "**Sumário**"
 EXCLUDED_DIRS = ("dados/", ".venv/", "node_modules/")
 HEADING = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
@@ -54,13 +59,43 @@ def slugify(text: str) -> str:
     return "".join(kept).replace(" ", "-")
 
 
+def _is_marker(line: str) -> bool:
+    return line.strip() in (MARKER, LEGACY_END)
+
+
+def _is_toc_body(line: str) -> bool:
+    stripped = line.strip()
+    return stripped in ("", TITLE) or re.match(r"^[-*]\s+\[.*\]\(#.*\)$", stripped) is not None
+
+
 def strip_toc(lines: list[str]) -> list[str]:
-    if START in lines and END in lines:
-        start, end = lines.index(START), lines.index(END)
-        del lines[start : end + 1]
-        while start < len(lines) and start > 0 and lines[start] == "" and lines[start - 1] == "":
-            del lines[start]
-    return lines
+    """Remove every TOC block (current, legacy, duplicated or single-line) outside code."""
+    kept: list[str] = []
+    i, in_code = 0, False
+    while i < len(lines):
+        line = lines[i]
+        if FENCE.match(line):
+            in_code = not in_code
+        stripped = line.strip()
+        if in_code or not stripped.startswith(MARKER) and not _is_marker(line):
+            kept.append(line)
+            i += 1
+            continue
+        if stripped != MARKER:
+            # Single-line block (e.g. "<!-- TOC -->...<!-- /TOC -->") or a stray closing marker.
+            i += 1
+        else:
+            close = next((j for j in range(i + 1, len(lines)) if _is_marker(lines[j])), None)
+            if close is not None and all(_is_toc_body(x) for x in lines[i + 1 : close]):
+                i = close + 1
+            else:
+                # Unclosed marker: drop it together with the TOC lines that follow.
+                i += 1
+                while i < len(lines) and _is_toc_body(lines[i]) and lines[i].strip():
+                    i += 1
+        while kept and kept[-1] == "" and i < len(lines) and lines[i] == "":
+            i += 1
+    return kept
 
 
 def headings(lines: list[str]) -> list[tuple[int, str]]:
@@ -83,15 +118,15 @@ def build_toc(lines: list[str]) -> list[str]:
         base = slugify(text)
         count = seen.get(base, 0)
         seen[base] = count + 1
-        if level not in (2, 3):
+        if level not in (1, 2, 3):
             continue
         anchor = base if count == 0 else f"{base}-{count}"
         label = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
         label = label.replace("[", "\\[").replace("]", "\\]")
-        entries.append(f"{'  ' * (level - 2)}- [{label}](#{anchor})")
+        entries.append(f"{'  ' * (level - 1)}- [{label}](#{anchor})")
     if not entries:
         return []
-    return [START, TITLE, "", *entries, END]
+    return [MARKER, TITLE, "", *entries, "", MARKER]
 
 
 def render(text: str) -> str:

@@ -3,17 +3,19 @@
 <!-- TOC -->
 **Sumário**
 
-- [Arquitetura](#arquitetura)
-- [Garantias](#garantias)
-- [Como rodar](#como-rodar)
-  - [Pré-requisitos](#pré-requisitos)
-  - [Variáveis do `.env`](#variáveis-do-env)
-  - [Subir, restaurar e parar](#subir-restaurar-e-parar)
-  - [Testes](#testes)
-  - [Quando algo dá errado](#quando-algo-dá-errado)
-- [Developers](#developers)
-- [LICENSE](#license)
-<!-- /TOC -->
+- [Residencial Aurora — assistente virtual com Google ADK](#residencial-aurora--assistente-virtual-com-google-adk)
+  - [Arquitetura](#arquitetura)
+  - [Garantias](#garantias)
+  - [Como rodar](#como-rodar)
+    - [Pré-requisitos](#pré-requisitos)
+    - [Variáveis do `.env`](#variáveis-do-env)
+    - [Subir, restaurar e parar](#subir-restaurar-e-parar)
+    - [Testes](#testes)
+    - [Quando algo dá errado](#quando-algo-dá-errado)
+  - [Developers](#developers)
+  - [LICENSE](#license)
+
+<!-- TOC -->
 
 Assistente do aplicativo dos moradores do Residencial Aurora. Pelo chat, o morador reserva o salão de festas, a churrasqueira e a quadra, cancela as próprias reservas, autoriza visitantes e tira dúvidas sobre o regulamento.
 
@@ -146,6 +148,7 @@ Os erros trazem a causa e a correção sugerida (`[ERRO] ... ↳ dica`). Os mais
 | `make up` diz que a porta está em uso | Outro processo usa 8000/9090/3000 | Troque `API_PORT`, `PROMETHEUS_PORT` ou `GRAFANA_PORT` no `.env` |
 | API responde 502 com `RESOURCE_EXHAUSTED` | Cota do Gemini esgotada | Espere, ou troque os modelos por agente no `.env` |
 | API responde 502 com `API key` | `GOOGLE_API_KEY` inválida | Gere outra chave no AI Studio |
+| `make test-unit` falha com `No module named 'aurora'` | O `.venv` foi criado antes de o repositório mudar de pasta | `make install` (recria o `.venv`) |
 | `Permission denied` em `./var` | Arquivos de outro usuário | `sudo chown -R $(id -u):$(id -g) var` |
 
 Mais diagnósticos: [docs/como-rodar.md](docs/como-rodar.md#diagnóstico-de-erros).

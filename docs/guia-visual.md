@@ -3,26 +3,28 @@
 <!-- TOC -->
 **Sumário**
 
-- [1. Glossário com analogias](#1-glossário-com-analogias)
-- [2. Visão geral da arquitetura](#2-visão-geral-da-arquitetura)
-- [3. Os agentes e quem atende o quê](#3-os-agentes-e-quem-atende-o-quê)
-  - [Quem o Runner escolhe](#quem-o-runner-escolhe)
-- [4. Fluxo de uma mensagem pela API](#4-fluxo-de-uma-mensagem-pela-api)
-- [5. Fluxo de uma confirmação (Garantia 1)](#5-fluxo-de-uma-confirmação-garantia-1)
-  - [Ciclo de vida de uma confirmação](#ciclo-de-vida-de-uma-confirmação)
-- [6. Cada sessão pertence a um apartamento (Garantia 2)](#6-cada-sessão-pertence-a-um-apartamento-garantia-2)
-- [7. Nada se perde no reinício (Garantia 3)](#7-nada-se-perde-no-reinício-garantia-3)
-- [8. O regulamento é consultado, não carregado (Garantia 4)](#8-o-regulamento-é-consultado-não-carregado-garantia-4)
-- [9. Dois moradores, uma reserva (Garantia 5)](#9-dois-moradores-uma-reserva-garantia-5)
-- [10. Modelo de dados](#10-modelo-de-dados)
-  - [Ciclo de vida de uma reserva](#ciclo-de-vida-de-uma-reserva)
-- [11. Principais classes e módulos](#11-principais-classes-e-módulos)
-- [12. Infraestrutura e comandos](#12-infraestrutura-e-comandos)
-  - [Containers](#containers)
-- [13. Testes](#13-testes)
-- [14. Observabilidade e erros](#14-observabilidade-e-erros)
-- [15. Para onde ir depois](#15-para-onde-ir-depois)
-<!-- /TOC -->
+- [Guia visual para iniciantes](#guia-visual-para-iniciantes)
+  - [1. Glossário com analogias](#1-glossário-com-analogias)
+  - [2. Visão geral da arquitetura](#2-visão-geral-da-arquitetura)
+  - [3. Os agentes e quem atende o quê](#3-os-agentes-e-quem-atende-o-quê)
+    - [Quem o Runner escolhe](#quem-o-runner-escolhe)
+  - [4. Fluxo de uma mensagem pela API](#4-fluxo-de-uma-mensagem-pela-api)
+  - [5. Fluxo de uma confirmação (Garantia 1)](#5-fluxo-de-uma-confirmação-garantia-1)
+    - [Ciclo de vida de uma confirmação](#ciclo-de-vida-de-uma-confirmação)
+  - [6. Cada sessão pertence a um apartamento (Garantia 2)](#6-cada-sessão-pertence-a-um-apartamento-garantia-2)
+  - [7. Nada se perde no reinício (Garantia 3)](#7-nada-se-perde-no-reinício-garantia-3)
+  - [8. O regulamento é consultado, não carregado (Garantia 4)](#8-o-regulamento-é-consultado-não-carregado-garantia-4)
+  - [9. Dois moradores, uma reserva (Garantia 5)](#9-dois-moradores-uma-reserva-garantia-5)
+  - [10. Modelo de dados](#10-modelo-de-dados)
+    - [Ciclo de vida de uma reserva](#ciclo-de-vida-de-uma-reserva)
+  - [11. Principais classes e módulos](#11-principais-classes-e-módulos)
+  - [12. Infraestrutura e comandos](#12-infraestrutura-e-comandos)
+    - [Containers](#containers)
+  - [13. Testes](#13-testes)
+  - [14. Observabilidade e erros](#14-observabilidade-e-erros)
+  - [15. Para onde ir depois](#15-para-onde-ir-depois)
+
+<!-- TOC -->
 
 Este guia explica o projeto com diagramas e analogias. Os diagramas usam [Mermaid](https://mermaid.js.org/) e aparecem desenhados no GitHub e no VS Code (com a extensão de pré-visualização de Markdown/Mermaid).
 
@@ -524,7 +526,7 @@ sequenceDiagram
     DEV->>MK: make test-unit
     MK->>DC: make up UP_FLAGS="-d --wait"
     DC-->>MK: containers saudáveis
-    MK->>PT: uv run pytest tests/unit
+    MK->>PT: uv run python -m pytest tests/unit
     PT-->>MK: resultado
     MK->>DC: make down (sempre, mesmo com falha)
     MK-->>DEV: [ OK ] sucesso ou [ERRO] falhou

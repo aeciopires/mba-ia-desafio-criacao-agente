@@ -3,11 +3,15 @@
 <!-- TOC -->
 **Sumário**
 
-- [\[Unreleased\]](#unreleased)
-  - [Adicionado](#adicionado)
-- [\[0.1.0\] - 2026-10-17](#010---2026-10-17)
-  - [Adicionado](#adicionado-1)
-<!-- /TOC -->
+- [Changelog](#changelog)
+  - [Unreleased](#unreleased)
+    - [Adicionado](#adicionado)
+    - [Alterado](#alterado)
+    - [Corrigido](#corrigido)
+  - [0.1.0 - 2026-10-17](#010---2026-10-17)
+    - [Adicionado](#adicionado-1)
+
+<!-- TOC -->
 
 Todas as mudanças relevantes do projeto são registradas aqui.
 
@@ -21,6 +25,15 @@ O formato segue o [Keep a Changelog 1.1.0](https://keepachangelog.com/pt-BR/1.1.
 - Guia visual para iniciantes (`docs/guia-visual.md`): 19 diagramas Mermaid (arquitetura, agentes e roteamento, fluxos da API e da confirmação, garantias, estados, modelo de dados, classes, infraestrutura, testes e observabilidade), cada um com analogias do condomínio, e glossário. Diagrama Mermaid resumido no README e em `docs/arquitetura.md`.
 - `make check-diagrams` (`scripts/check-mermaid.sh`): valida todos os blocos Mermaid com a imagem oficial `minlag/mermaid-cli`.
 - Regras de criação e manutenção dos diagramas e das analogias no `CLAUDE.md` e no `CONTRIBUTING.md`.
+
+### Alterado
+
+- `make toc` (`scripts/gen_toc.py`) agora delimita o sumário com duas marcas `<!-- TOC -->`, compatível com os plugins de TOC dos editores, no lugar de `<!-- TOC -->`/`<!-- /TOC -->`. O script ficou idempotente: remove sumários duplicados, no formato antigo ou colapsados numa linha antes de gravar um único bloco. Regra atualizada no `CLAUDE.md` e no `CONTRIBUTING.md`.
+- O sumário passa a listar também o título `#`, com `##` e `###` aninhados, igual à saída dos plugins de TOC.
+
+### Corrigido
+
+- `make test-unit` e `make test-integration` falhavam com `ModuleNotFoundError: No module named 'aurora'` quando o `.venv` tinha sido criado em outro caminho (o shebang de `pytest` apontava para um Python inexistente). Os alvos agora usam `uv run python -m pytest`, e o `make install` recria um `.venv` de outro caminho.
 
 ## [0.1.0] - 2026-10-17
 

@@ -3,19 +3,21 @@
 <!-- TOC -->
 **Sumário**
 
-- [1. Caminho rápido (recomendado)](#1-caminho-rápido-recomendado)
-- [2. Particularidades do Ubuntu 22.04](#2-particularidades-do-ubuntu-2204)
-- [3. Instalação manual (instruções oficiais)](#3-instalação-manual-instruções-oficiais)
-  - [3.1 Pacotes base](#31-pacotes-base)
-  - [3.2 Docker Engine, Compose v2 e Buildx](#32-docker-engine-compose-v2-e-buildx)
-  - [3.3 Docker sem `sudo`](#33-docker-sem-sudo)
-  - [3.4 Build multi-arquitetura (opcional, para `make build-multiarch`)](#34-build-multi-arquitetura-opcional-para-make-build-multiarch)
-  - [3.5 mise](#35-mise)
-  - [3.6 Python, uv e jq (via mise) e dependências do projeto](#36-python-uv-e-jq-via-mise-e-dependências-do-projeto)
-- [4. Versões de referência](#4-versões-de-referência)
-- [5. Verificação final](#5-verificação-final)
-- [6. Problemas comuns](#6-problemas-comuns)
-<!-- /TOC -->
+- [Requisitos — Ubuntu 22.04 LTS (Jammy Jellyfish)](#requisitos--ubuntu-2204-lts-jammy-jellyfish)
+  - [1. Caminho rápido (recomendado)](#1-caminho-rápido-recomendado)
+  - [2. Particularidades do Ubuntu 22.04](#2-particularidades-do-ubuntu-2204)
+  - [3. Instalação manual (instruções oficiais)](#3-instalação-manual-instruções-oficiais)
+    - [3.1 Pacotes base](#31-pacotes-base)
+    - [3.2 Docker Engine, Compose v2 e Buildx](#32-docker-engine-compose-v2-e-buildx)
+    - [3.3 Docker sem `sudo`](#33-docker-sem-sudo)
+    - [3.4 Build multi-arquitetura (opcional, para `make build-multiarch`)](#34-build-multi-arquitetura-opcional-para-make-build-multiarch)
+    - [3.5 mise](#35-mise)
+    - [3.6 Python, uv e jq (via mise) e dependências do projeto](#36-python-uv-e-jq-via-mise-e-dependências-do-projeto)
+  - [4. Versões de referência](#4-versões-de-referência)
+  - [5. Verificação final](#5-verificação-final)
+  - [6. Problemas comuns](#6-problemas-comuns)
+
+<!-- TOC -->
 
 Arquiteturas suportadas: **amd64** (x86_64) e **arm64** (aarch64). Última revisão: 2026-10-17.
 

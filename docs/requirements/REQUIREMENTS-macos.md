@@ -3,19 +3,21 @@
 <!-- TOC -->
 **Sumário**
 
-- [1. Caminho rápido (recomendado)](#1-caminho-rápido-recomendado)
-- [2. Particularidades do macOS](#2-particularidades-do-macos)
-- [3. Instalação manual (instruções oficiais)](#3-instalação-manual-instruções-oficiais)
-  - [3.1 Ferramentas base](#31-ferramentas-base)
-  - [3.2 Colima, Docker CLI, Compose e Buildx](#32-colima-docker-cli-compose-e-buildx)
-  - [3.3 Iniciar o Colima](#33-iniciar-o-colima)
-  - [3.4 Build multi-arquitetura (opcional, para `make build-multiarch`)](#34-build-multi-arquitetura-opcional-para-make-build-multiarch)
-  - [3.5 mise](#35-mise)
-  - [3.6 Python, uv e jq (via mise) e dependências do projeto](#36-python-uv-e-jq-via-mise-e-dependências-do-projeto)
-- [4. Versões de referência](#4-versões-de-referência)
-- [5. Verificação final](#5-verificação-final)
-- [6. Problemas comuns](#6-problemas-comuns)
-<!-- /TOC -->
+- [Requisitos — macOS (Intel e Apple Silicon)](#requisitos--macos-intel-e-apple-silicon)
+  - [1. Caminho rápido (recomendado)](#1-caminho-rápido-recomendado)
+  - [2. Particularidades do macOS](#2-particularidades-do-macos)
+  - [3. Instalação manual (instruções oficiais)](#3-instalação-manual-instruções-oficiais)
+    - [3.1 Ferramentas base](#31-ferramentas-base)
+    - [3.2 Colima, Docker CLI, Compose e Buildx](#32-colima-docker-cli-compose-e-buildx)
+    - [3.3 Iniciar o Colima](#33-iniciar-o-colima)
+    - [3.4 Build multi-arquitetura (opcional, para `make build-multiarch`)](#34-build-multi-arquitetura-opcional-para-make-build-multiarch)
+    - [3.5 mise](#35-mise)
+    - [3.6 Python, uv e jq (via mise) e dependências do projeto](#36-python-uv-e-jq-via-mise-e-dependências-do-projeto)
+  - [4. Versões de referência](#4-versões-de-referência)
+  - [5. Verificação final](#5-verificação-final)
+  - [6. Problemas comuns](#6-problemas-comuns)
+
+<!-- TOC -->
 
 Arquiteturas suportadas: **amd64** (Intel) e **arm64** (Apple Silicon). O runtime de containers é o **[Colima](https://github.com/abiosoft/colima)**, uma VM Linux com Docker Engine, usada com o Docker CLI, o Compose e o Buildx. Última revisão: 2026-10-17.
 

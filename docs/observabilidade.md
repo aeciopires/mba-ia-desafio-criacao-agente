@@ -3,9 +3,11 @@
 <!-- TOC -->
 **Sumário**
 
-- [Dashboards](#dashboards)
-- [Métricas](#métricas)
-<!-- /TOC -->
+- [Observabilidade](#observabilidade)
+  - [Dashboards](#dashboards)
+  - [Métricas](#métricas)
+
+<!-- TOC -->
 
 `make up` sobe o Prometheus (`:9090`) e o Grafana (`:3000`, admin/admin). As portas são configuráveis com `PROMETHEUS_PORT` e `GRAFANA_PORT`. O Prometheus coleta `GET /metrics` da API a cada 10 s. O Grafana já vem com a fonte de dados e dois dashboards na pasta **Aurora**.
 

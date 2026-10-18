@@ -3,15 +3,17 @@
 <!-- TOC -->
 **Sumário**
 
-- [1. Fonte da verdade e precedência](#1-fonte-da-verdade-e-precedência)
-- [2. Guardrails invioláveis (nunca fazer)](#2-guardrails-invioláveis-nunca-fazer)
-- [3. Convenções](#3-convenções)
-- [4. Regras de sincronização (manter tudo consistente)](#4-regras-de-sincronização-manter-tudo-consistente)
-- [5. Definição de pronto para qualquer mudança](#5-definição-de-pronto-para-qualquer-mudança)
-- [6. Comandos úteis](#6-comandos-úteis)
-- [7. Armadilhas conhecidas](#7-armadilhas-conhecidas)
-- [8. Atualização de dependências (somente quando explicitamente solicitada)](#8-atualização-de-dependências-somente-quando-explicitamente-solicitada)
-<!-- /TOC -->
+- [CLAUDE.md — instruções e guardrails do repositório](#claudemd--instruções-e-guardrails-do-repositório)
+  - [1. Fonte da verdade e precedência](#1-fonte-da-verdade-e-precedência)
+  - [2. Guardrails invioláveis (nunca fazer)](#2-guardrails-invioláveis-nunca-fazer)
+  - [3. Convenções](#3-convenções)
+  - [4. Regras de sincronização (manter tudo consistente)](#4-regras-de-sincronização-manter-tudo-consistente)
+  - [5. Definição de pronto para qualquer mudança](#5-definição-de-pronto-para-qualquer-mudança)
+  - [6. Comandos úteis](#6-comandos-úteis)
+  - [7. Armadilhas conhecidas](#7-armadilhas-conhecidas)
+  - [8. Atualização de dependências (somente quando explicitamente solicitada)](#8-atualização-de-dependências-somente-quando-explicitamente-solicitada)
+
+<!-- TOC -->
 
 Contrato de trabalho para agentes de código (e pessoas) que alteram este repositório. A versão para pessoas é o [CONTRIBUTING.md](CONTRIBUTING.md); os dois não podem se contradizer.
 
@@ -47,7 +49,9 @@ Contrato de trabalho para agentes de código (e pessoas) que alteram este reposi
   - `scripts/`, `observability/`, `docs/`
 - Mensagens de erro (Makefile, scripts e API) dizem a causa e o que fazer (`[ERRO] ...` + `↳ dica`).
 - **Sumário (TOC) em todo arquivo `.md`:**
-  - fica logo após o título `#`, entre `<!-- TOC -->` e `<!-- /TOC -->`, e lista os títulos `##` e `###`;
+  - fica logo após o título `#`, entre **duas** marcas iguais `<!-- TOC -->` (abertura e fechamento), e lista os títulos `#`, `##` e `###` aninhados, igual à saída dos plugins de TOC dos editores;
+  - não use `<!-- /TOC -->` como fechamento: esse formato conflita com os plugins de TOC dos editores (ex.: Markdown TOC no VS Code), que reescrevem o bloco, duplicam o sumário ou o colapsam numa linha só;
+  - o `make toc` é idempotente: remove todos os sumários existentes (duplicados, no formato antigo `<!-- /TOC -->` ou colapsados numa linha) antes de gravar um único bloco novo, e rodá-lo de novo não muda nada;
   - é gerado por `make toc` (`scripts/gen_toc.py`); não edite o bloco à mão;
   - todo `.md` novo ganha o sumário ao rodar `make toc`;
   - exceção: `dados/` (não pode ser alterado).
@@ -95,6 +99,7 @@ Contrato de trabalho para agentes de código (e pessoas) que alteram este reposi
 - **Confirmação aceita sem executar:** acontece quando o Runner entrega a resposta ao agente errado. Hoje a resposta chega ao agente certo por causa do `App` resumível com especialistas transferíveis. A rota confere se a tool executou e loga `Confirmation ... was stored but the tool did not run`. Teste sempre com sessão persistida e após reinício (cenário C15).
 - **Roteamento de mensagens novas:** o `AuroraRunner` força o agente principal em toda mensagem de texto nova. Não remova isso sem medir com os testes de integração.
 - **Cotas do Gemini:** chaves gratuitas têm limites baixos por modelo, por minuto e por dia. Use `AURORA_MODEL_*` por agente para dividir a carga.
+- **`.venv` de outro caminho:** se o repositório for movido ou renomeado, os executáveis do `.venv` (ex.: `pytest`) ficam com o shebang apontando para o caminho antigo e os testes falham com `ModuleNotFoundError: No module named 'aurora'`. Os alvos do Makefile chamam `uv run python -m pytest`, que não depende do shebang, e o `make install` recria o `.venv` nesse caso. Rode sempre `python -m pytest`, não `pytest`.
 - **Ambiente em `.env`:** variáveis vazias usam o padrão (`env_ignore_empty`). Dentro do container a API escuta sempre na 8000.
 
 ## 8. Atualização de dependências (somente quando explicitamente solicitada)

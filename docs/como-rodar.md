@@ -3,14 +3,16 @@
 <!-- TOC -->
 **Sumário**
 
-- [1. Pré-requisitos](#1-pré-requisitos)
-- [2. Configuração](#2-configuração)
-  - [Portas](#portas)
-  - [Modelos e cotas do Gemini](#modelos-e-cotas-do-gemini)
-- [3. Subir e restaurar](#3-subir-e-restaurar)
-- [4. Imagens Docker](#4-imagens-docker)
-- [Diagnóstico de erros](#diagnóstico-de-erros)
-<!-- /TOC -->
+- [Como rodar](#como-rodar)
+  - [1. Pré-requisitos](#1-pré-requisitos)
+  - [2. Configuração](#2-configuração)
+    - [Portas](#portas)
+    - [Modelos e cotas do Gemini](#modelos-e-cotas-do-gemini)
+  - [3. Subir e restaurar](#3-subir-e-restaurar)
+  - [4. Imagens Docker](#4-imagens-docker)
+  - [Diagnóstico de erros](#diagnóstico-de-erros)
+
+<!-- TOC -->
 
 ## 1. Pré-requisitos
 
@@ -128,6 +130,7 @@ Todas as mensagens seguem o formato `[ERRO] causa` + `↳ o que fazer`.
 | API (500) | `A confirmação foi registrada, mas a ação não executou` | Roteamento do ADK; veja o log `Confirmation ... was stored but the tool did not run`. |
 | API (log) | `Não foi possível abrir o banco SQLite` | Permissão em `./var`: `sudo chown -R $(id -u):$(id -g) var`. |
 | API (log) | `Arquivo de dados ausente` | `./dados` não montado ou `AURORA_DADOS_DIR` errado. |
+| `make test-unit` | `ModuleNotFoundError: No module named 'aurora'` | `.venv` criado em outro caminho (repositório movido ou renomeado): o shebang dos executáveis aponta para um Python que não existe. `make install` recria o `.venv`. |
 | `make restore` | `[restore] ERRO: ...` | Mostra o arquivo ou a permissão com problema. |
 
 Para mais detalhes: `LOG_LEVEL=DEBUG` no `.env` e `make logs`. Os logs mostram cada chamada de modelo e de tool que falhou, com agente, modelo e argumentos.

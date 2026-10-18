@@ -121,6 +121,55 @@ def test_markdown_tocs_are_current():
     assert result.returncode == 0, result.stderr
 
 
+def _gen_toc():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("gen_toc", ROOT / "scripts" / "gen_toc.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_markdown_toc_is_idempotent_and_removes_duplicates():
+    gen_toc = _gen_toc()
+    doc = "\n".join(
+        [
+            "# Title",
+            "",
+            "<!-- TOC -->autoauto- [Old](#old)autoauto<!-- /TOC -->",
+            "",
+            "<!-- TOC -->",
+            "**Sumário**",
+            "",
+            "- [Old](#old)",
+            "<!-- /TOC -->",
+            "",
+            "<!-- TOC -->",
+            "**Sumário**",
+            "",
+            "- [Old](#old)",
+            "",
+            "<!-- TOC -->",
+            "",
+            "Intro.",
+            "",
+            "```markdown",
+            "<!-- TOC -->",
+            "```",
+            "",
+            "## Section",
+            "",
+        ]
+    )
+    once = gen_toc.render(doc)
+    assert gen_toc.render(once) == once
+    assert "<!-- /TOC -->" not in once
+    assert once.startswith(
+        "# Title\n\n<!-- TOC -->\n**Sumário**\n\n- [Title](#title)\n  - [Section](#section)\n\n<!-- TOC -->\n\nIntro."
+    )
+    assert "```markdown\n<!-- TOC -->\n```" in once
+
+
 def test_visual_guide_has_diagrams_and_analogies():
     guide = _read("docs/guia-visual.md")
     assert guide.count("```mermaid") >= 15

@@ -3,8 +3,10 @@
 <!-- TOC -->
 **Sumário**
 
-- [O que é necessário](#o-que-é-necessário)
-<!-- /TOC -->
+- [Requisitos](#requisitos)
+  - [O que é necessário](#o-que-é-necessário)
+
+<!-- TOC -->
 
 Descubra o seu sistema e siga o arquivo correspondente:
 

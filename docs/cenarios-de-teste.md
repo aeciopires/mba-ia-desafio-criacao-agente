@@ -3,11 +3,13 @@
 <!-- TOC -->
 **Sumário**
 
-- [Preparação](#preparação)
-  - [Pelo Swagger](#pelo-swagger)
-  - [Funções de `scripts/api.sh`](#funções-de-scriptsapish)
-- [Cenários](#cenários)
-<!-- /TOC -->
+- [Cenários de teste manuais (Swagger e curl)](#cenários-de-teste-manuais-swagger-e-curl)
+  - [Preparação](#preparação)
+    - [Pelo Swagger](#pelo-swagger)
+    - [Funções de `scripts/api.sh`](#funções-de-scriptsapish)
+  - [Cenários](#cenários)
+
+<!-- TOC -->
 
 Os cenários espelham o fluxo do avaliador do `TASK.md`. Execute-os em ordem, depois de `make restore`. O `make smoke` roda todos automaticamente.
 

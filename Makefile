@@ -63,6 +63,10 @@ install: check-os ## Instala o mise (no seu usuário), as ferramentas do mise.to
 	fi
 	@$(MISE) trust --yes mise.toml >/dev/null 2>&1 || true
 	@$(MISE) install || { echo "[ERRO] 'mise install' falhou. Rode '$(MISE) doctor' para diagnosticar." >&2; exit 1; }
+	@if [ -f .venv/bin/activate ] && ! grep -qF '$(CURDIR)/.venv' .venv/bin/activate; then \
+	  echo "[WARN] O .venv foi criado em outro caminho (repositório movido ou renomeado). Recriando..."; \
+	  rm -rf .venv; \
+	fi
 	@$(RUN) uv sync || { echo "[ERRO] 'uv sync' falhou. Confira a conexão com o PyPI e o arquivo uv.lock." >&2; exit 1; }
 	@echo "[ OK ] Ambiente pronto. Ative o mise no shell: https://mise.jdx.dev/getting-started.html"
 	@[ -f .env ] || echo "[WARN] Falta o .env: cp .env.example .env e preencha GOOGLE_API_KEY."
@@ -145,12 +149,12 @@ endef
 .PHONY: test-unit
 test-unit: ## Testes unitários (sobe a stack antes e derruba depois)
 	$(call banner,Testes unitários)
-	$(call run_tests,$(RUN) uv run pytest tests/unit $(PYTEST_FLAGS),Testes unitários)
+	$(call run_tests,$(RUN) uv run python -m pytest tests/unit $(PYTEST_FLAGS),Testes unitários)
 
 .PHONY: test-integration
 test-integration: ## Testes de integração do fluxo do avaliador (precisa de GOOGLE_API_KEY)
 	$(call banner,Testes de integração em $(BASE_URL))
-	$(call run_tests,$(MAKE) --no-print-directory restore >/dev/null && AURORA_BASE_URL=$(BASE_URL) $(RUN) uv run pytest tests/integration -m integration $(PYTEST_FLAGS),Testes de integração)
+	$(call run_tests,$(MAKE) --no-print-directory restore >/dev/null && AURORA_BASE_URL=$(BASE_URL) $(RUN) uv run python -m pytest tests/integration -m integration $(PYTEST_FLAGS),Testes de integração)
 
 .PHONY: tests
 tests: test-unit test-integration ## Unitários + integração

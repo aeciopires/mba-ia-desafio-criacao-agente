@@ -3,16 +3,18 @@
 <!-- TOC -->
 **Sumário**
 
-- [Visão geral](#visão-geral)
-- [Agentes](#agentes)
-  - [`aurora_concierge`](#aurora_concierge)
-  - [`reservas_agent` e `visitantes_agent`](#reservas_agent-e-visitantes_agent)
-  - [`regulamento_agent`](#regulamento_agent)
-- [Spike da confirmação (Fase 1)](#spike-da-confirmação-fase-1)
-- [Fluxo de uma confirmação](#fluxo-de-uma-confirmação)
-- [Persistência](#persistência)
-- [Erros e diagnóstico](#erros-e-diagnóstico)
-<!-- /TOC -->
+- [Arquitetura](#arquitetura)
+  - [Visão geral](#visão-geral)
+  - [Agentes](#agentes)
+    - [`aurora_concierge`](#aurora_concierge)
+    - [`reservas_agent` e `visitantes_agent`](#reservas_agent-e-visitantes_agent)
+    - [`regulamento_agent`](#regulamento_agent)
+  - [Spike da confirmação (Fase 1)](#spike-da-confirmação-fase-1)
+  - [Fluxo de uma confirmação](#fluxo-de-uma-confirmação)
+  - [Persistência](#persistência)
+  - [Erros e diagnóstico](#erros-e-diagnóstico)
+
+<!-- TOC -->
 
 > Para uma explicação passo a passo com diagramas e analogias, comece pelo [guia visual](guia-visual.md).
 

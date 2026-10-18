@@ -3,14 +3,17 @@
 <!-- TOC -->
 **Sumário**
 
-- [1. Preparar o ambiente](#1-preparar-o-ambiente)
-- [2. Fluxo de trabalho](#2-fluxo-de-trabalho)
-- [3. Convenções](#3-convenções)
-- [4. Regras que não podem ser quebradas](#4-regras-que-não-podem-ser-quebradas)
-- [5. Testes obrigatórios antes do PR](#5-testes-obrigatórios-antes-do-pr)
-- [6. Checklist do PR](#6-checklist-do-pr)
-- [7. Atualização de dependências](#7-atualização-de-dependências)
-<!-- /TOC -->
+- [Como contribuir](#como-contribuir)
+  - [1. Preparar o ambiente](#1-preparar-o-ambiente)
+  - [2. Fluxo de trabalho](#2-fluxo-de-trabalho)
+  - [Fluxo de commits e pull requests](#fluxo-de-commits-e-pull-requests)
+  - [3. Convenções](#3-convenções)
+  - [4. Regras que não podem ser quebradas](#4-regras-que-não-podem-ser-quebradas)
+  - [5. Testes obrigatórios antes do PR](#5-testes-obrigatórios-antes-do-pr)
+  - [6. Checklist do PR](#6-checklist-do-pr)
+  - [7. Atualização de dependências](#7-atualização-de-dependências)
+
+<!-- TOC -->
 
 Obrigado por contribuir com o assistente do Residencial Aurora! Este guia é para pessoas. Agentes de código seguem o [CLAUDE.md](CLAUDE.md), que tem as mesmas regras com mais detalhes.
 
@@ -40,12 +43,90 @@ Se alguma porta estiver ocupada, troque `API_PORT`, `PROMETHEUS_PORT` ou `GRAFAN
 2. Escreva os commits no padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/), em en-US. Exemplo: `fix: return 409 for answered confirmations`.
 3. Abra o pull request para a `main` com o checklist da seção 6 preenchido.
 
+## Fluxo de commits e pull requests
+
+Use um fork para propor alterações. Configure a autenticação SSH do GitHub
+conforme a [documentação oficial](https://docs.github.com/authentication/connecting-to-github-with-ssh)
+e siga estes passos:
+
+1. Crie um fork de `aeciopires/mba-ia-desafio-criacao-agente` no GitHub e clone-o:
+
+   ```bash
+   git clone git@github.com:SEU_USUARIO/mba-ia-desafio-criacao-agente.git
+   cd mba-ia-desafio-criacao-agente
+   ```
+
+2. Registre o repositório original como `upstream` e confira os remotos:
+
+   ```bash
+   git remote add upstream git@github.com:aeciopires/mba-ia-desafio-criacao-agente.git
+   git remote -v
+   ```
+
+3. Atualize a branch principal local e crie uma branch para sua alteração:
+
+   ```bash
+   git switch main
+   git pull upstream main
+   git switch -c tipo/descricao-curta
+   ```
+
+   Use um nome simples e descritivo para a branch, por exemplo
+   `docs/guia-de-instalacao` ou `fix/carregamento-agente`.
+
+4. Faça e valide as alterações. Revise o diff e confirme que somente os arquivos
+   pretendidos serão incluídos:
+
+   ```bash
+   git status --short
+   git diff --check
+   git diff
+   ```
+
+5. Adicione os arquivos pertinentes, crie commits focados com mensagens
+   descritivas e envie a branch ao seu fork:
+
+   ```bash
+   git add caminho/do/arquivo
+   git commit -m "docs: descreve a estrutura do projeto"
+   git push --set-upstream origin tipo/descricao-curta
+   ```
+
+   Não inclua credenciais, arquivos `.env`, ambientes virtuais nem outros
+   arquivos locais no commit. Se houver mais de uma alteração independente,
+   prefira separá-las em commits claros.
+
+6. No GitHub, abra um pull request do seu fork para a branch `main` do
+   repositório original. Descreva o objetivo, resuma as mudanças e informe as
+   validações executadas. Considere e responda às sugestões da revisão; envie
+   novos commits à mesma branch quando fizer ajustes.
+
+7. Após o merge, atualize sua branch principal e, se desejar, remova a branch de
+   trabalho:
+
+   ```bash
+   git switch main
+   git pull upstream main
+   git push origin main
+   git branch -d tipo/descricao-curta
+   git push origin --delete tipo/descricao-curta
+   ```
+
+Para sincronizar o fork posteriormente, estando na branch `main`, execute:
+
+```bash
+git pull upstream main
+git push origin main
+```
+
+Contribuições estão sujeitas aos termos da licença MIT deste repositório.
+
 ## 3. Convenções
 
 - Código, comentários e nomes em en-US. Documentação em pt-BR.
 - Estrutura: `src/aurora/{api,agents,tools,db,regulamento}`, `tests/{unit,integration}`, `scripts/`, `observability/` e `docs/`.
 - Mensagens de erro dizem a causa e o que fazer.
-- Todo arquivo `.md` tem um sumário (TOC) logo após o título, gerado por `make toc`. Não edite o bloco `<!-- TOC -->` à mão.
+- Todo arquivo `.md` tem um sumário (TOC) logo após o título, gerado por `make toc`, com os títulos `#`, `##` e `###` (igual aos plugins de TOC dos editores). O bloco fica entre duas marcas `<!-- TOC -->` (não use `<!-- /TOC -->`, que conflita com plugins de editor). Não edite o bloco à mão; o `make toc` é idempotente e remove sumários duplicados.
 - A documentação é escrita para iniciantes: diagramas em Mermaid, cada um com uma analogia do condomínio (veja o [guia visual](docs/guia-visual.md)). Se mudar algo que aparece num diagrama, atualize o diagrama e rode `make check-diagrams`.
 
 ## 4. Regras que não podem ser quebradas
