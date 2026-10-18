@@ -4,36 +4,16 @@
 **Sumário**
 
 - [Changelog](#changelog)
-  - [Unreleased](#unreleased)
+  - [0.1.0 - 2026-10-17](#010---2026-10-17)
     - [Adicionado](#adicionado)
     - [Alterado](#alterado)
     - [Corrigido](#corrigido)
-  - [0.1.0 - 2026-10-17](#010---2026-10-17)
-    - [Adicionado](#adicionado-1)
 
 <!-- TOC -->
 
 Todas as mudanças relevantes do projeto são registradas aqui.
 
 O formato segue o [Keep a Changelog 1.1.0](https://keepachangelog.com/pt-BR/1.1.0/), e o projeto usa [Versionamento Semântico 2.0.0](https://semver.org/lang/pt-BR/). A versão vem do arquivo [VERSION](VERSION).
-
-## [Unreleased]
-
-### Adicionado
-
-- Sumário (TOC) no início de cada arquivo `.md`, gerado por `make toc` (`scripts/gen_toc.py`). O `make lint` e um teste unitário falham se algum sumário estiver desatualizado. Regra registrada no `CLAUDE.md` e no `CONTRIBUTING.md`.
-- Guia visual para iniciantes (`docs/guia-visual.md`): 19 diagramas Mermaid (arquitetura, agentes e roteamento, fluxos da API e da confirmação, garantias, estados, modelo de dados, classes, infraestrutura, testes e observabilidade), cada um com analogias do condomínio, e glossário. Diagrama Mermaid resumido no README e em `docs/arquitetura.md`.
-- `make check-diagrams` (`scripts/check-mermaid.sh`): valida todos os blocos Mermaid com a imagem oficial `minlag/mermaid-cli`.
-- Regras de criação e manutenção dos diagramas e das analogias no `CLAUDE.md` e no `CONTRIBUTING.md`.
-
-### Alterado
-
-- `make toc` (`scripts/gen_toc.py`) agora delimita o sumário com duas marcas `<!-- TOC -->`, compatível com os plugins de TOC dos editores, no lugar de `<!-- TOC -->`/`<!-- /TOC -->`. O script ficou idempotente: remove sumários duplicados, no formato antigo ou colapsados numa linha antes de gravar um único bloco. Regra atualizada no `CLAUDE.md` e no `CONTRIBUTING.md`.
-- O sumário passa a listar também o título `#`, com `##` e `###` aninhados, igual à saída dos plugins de TOC.
-
-### Corrigido
-
-- `make test-unit` e `make test-integration` falhavam com `ModuleNotFoundError: No module named 'aurora'` quando o `.venv` tinha sido criado em outro caminho (o shebang de `pytest` apontava para um Python inexistente). Os alvos agora usam `uv run python -m pytest`, e o `make install` recria um `.venv` de outro caminho.
 
 ## [0.1.0] - 2026-10-17
 
@@ -75,6 +55,20 @@ O formato segue o [Keep a Changelog 1.1.0](https://keepachangelog.com/pt-BR/1.1.
   - `README.md` e `docs/`;
   - `REQUIREMENTS.md` e requisitos por sistema (Ubuntu 22.04/24.04/26.04 e macOS com Colima);
   - `CONTRIBUTING.md`, `CLAUDE.md` e `PLAN.md`.
+- Sumário (TOC) no início de cada arquivo `.md`, gerado por `make toc` (`scripts/gen_toc.py`). O `make lint` e um teste unitário falham se algum sumário estiver desatualizado. Regra registrada no `CLAUDE.md` e no `CONTRIBUTING.md`.
+- Guia visual para iniciantes (`docs/guia-visual.md`): 19 diagramas Mermaid (arquitetura, agentes e roteamento, fluxos da API e da confirmação, garantias, estados, modelo de dados, classes, infraestrutura, testes e observabilidade), cada um com analogias do condomínio, e glossário. Diagrama Mermaid resumido no README e em `docs/arquitetura.md`.
+- `make check-diagrams` (`scripts/check-mermaid.sh`): valida todos os blocos Mermaid com a imagem oficial `minlag/mermaid-cli`.
+- Regras de criação e manutenção dos diagramas e das analogias no `CLAUDE.md` e no `CONTRIBUTING.md`.
+
+### Alterado
+
+- `make toc` (`scripts/gen_toc.py`) agora delimita o sumário com duas marcas `<!-- TOC -->`, compatível com os plugins de TOC dos editores, no lugar de `<!-- TOC -->`/`<!-- /TOC -->`. O script ficou idempotente: remove sumários duplicados, no formato antigo ou colapsados numa linha antes de gravar um único bloco. Regra atualizada no `CLAUDE.md` e no `CONTRIBUTING.md`.
+- O sumário passa a listar também o título `#`, com `##` e `###` aninhados, igual à saída dos plugins de TOC.
+
+### Corrigido
+
+- `make test-unit` e `make test-integration` falhavam com `ModuleNotFoundError: No module named 'aurora'` quando o `.venv` tinha sido criado em outro caminho (o shebang de `pytest` apontava para um Python inexistente). Os alvos agora usam `uv run python -m pytest`, e o `make install` recria um `.venv` de outro caminho.
+
 
 [Unreleased]: https://github.com/aeciopires/mba-ia-desafio-criacao-agente/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/aeciopires/mba-ia-desafio-criacao-agente/releases/tag/v0.1.0
