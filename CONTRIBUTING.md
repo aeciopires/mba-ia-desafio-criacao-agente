@@ -5,8 +5,7 @@
 
 - [Como contribuir](#como-contribuir)
   - [1. Preparar o ambiente](#1-preparar-o-ambiente)
-  - [2. Fluxo de trabalho](#2-fluxo-de-trabalho)
-  - [Fluxo de commits e pull requests](#fluxo-de-commits-e-pull-requests)
+  - [2. Fluxo de commits e pull requests](#2-fluxo-de-commits-e-pull-requests)
   - [3. Convenções](#3-convenções)
   - [4. Regras que não podem ser quebradas](#4-regras-que-não-podem-ser-quebradas)
   - [5. Testes obrigatórios antes do PR](#5-testes-obrigatórios-antes-do-pr)
@@ -21,29 +20,28 @@ Obrigado por contribuir com o assistente do Residencial Aurora! Este guia é par
 
 1. Leia o [REQUIREMENTS.md](REQUIREMENTS.md). Ele indica o arquivo de requisitos do seu sistema.
 2. Rode as checagens e a instalação:
-   ```bash
-   make check-os
-   make check-dependencies
-   make install
-   ```
+
+```bash
+make check-os
+make check-dependencies
+make install
+```
+
 3. Configure o ambiente:
-   ```bash
-   cp .env.example .env    # preencha GOOGLE_API_KEY (Google AI Studio)
-   ```
+
+```bash
+cp .env.example .env    # preencha GOOGLE_API_KEY (Google AI Studio)
+```
+
 4. Suba e teste:
-   ```bash
-   make restore && make up
-   ```
+
+```bash
+make restore && make up
+```
 
 Se alguma porta estiver ocupada, troque `API_PORT`, `PROMETHEUS_PORT` ou `GRAFANA_PORT` no `.env`.
 
-## 2. Fluxo de trabalho
-
-1. Faça um fork e crie uma branch a partir da `main`: `feat/...`, `fix/...`, `docs/...` ou `chore/...`.
-2. Escreva os commits no padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/), em en-US. Exemplo: `fix: return 409 for answered confirmations`.
-3. Abra o pull request para a `main` com o checklist da seção 6 preenchido.
-
-## Fluxo de commits e pull requests
+## 2. Fluxo de commits e pull requests
 
 Use um fork para propor alterações. Configure a autenticação SSH do GitHub
 conforme a [documentação oficial](https://docs.github.com/authentication/connecting-to-github-with-ssh)
@@ -51,25 +49,25 @@ e siga estes passos:
 
 1. Crie um fork de `aeciopires/mba-ia-desafio-criacao-agente` no GitHub e clone-o:
 
-   ```bash
-   git clone git@github.com:SEU_USUARIO/mba-ia-desafio-criacao-agente.git
-   cd mba-ia-desafio-criacao-agente
-   ```
+```bash
+git clone git@github.com:SEU_USUARIO/mba-ia-desafio-criacao-agente.git
+cd mba-ia-desafio-criacao-agente
+```
 
 2. Registre o repositório original como `upstream` e confira os remotos:
 
-   ```bash
-   git remote add upstream git@github.com:aeciopires/mba-ia-desafio-criacao-agente.git
-   git remote -v
-   ```
+```bash
+git remote add upstream git@github.com:aeciopires/mba-ia-desafio-criacao-agente.git
+git remote -v
+```
 
 3. Atualize a branch principal local e crie uma branch para sua alteração:
 
-   ```bash
-   git switch main
-   git pull upstream main
-   git switch -c tipo/descricao-curta
-   ```
+```bash
+git switch main
+git pull upstream main
+git switch -c tipo/descricao-curta
+```
 
    Use um nome simples e descritivo para a branch, por exemplo
    `docs/guia-de-instalacao` ou `fix/carregamento-agente`.
@@ -77,20 +75,20 @@ e siga estes passos:
 4. Faça e valide as alterações. Revise o diff e confirme que somente os arquivos
    pretendidos serão incluídos:
 
-   ```bash
-   git status --short
-   git diff --check
-   git diff
-   ```
+```bash
+git status --short
+git diff --check
+git diff
+```
 
 5. Adicione os arquivos pertinentes, crie commits focados com mensagens
    descritivas e envie a branch ao seu fork:
 
-   ```bash
-   git add caminho/do/arquivo
-   git commit -m "docs: descreve a estrutura do projeto"
-   git push --set-upstream origin tipo/descricao-curta
-   ```
+```bash
+git add caminho/do/arquivo
+git commit -m "docs: descreve a estrutura do projeto"
+git push --set-upstream origin tipo/descricao-curta
+```
 
    Não inclua credenciais, arquivos `.env`, ambientes virtuais nem outros
    arquivos locais no commit. Se houver mais de uma alteração independente,
@@ -104,13 +102,13 @@ e siga estes passos:
 7. Após o merge, atualize sua branch principal e, se desejar, remova a branch de
    trabalho:
 
-   ```bash
-   git switch main
-   git pull upstream main
-   git push origin main
-   git branch -d tipo/descricao-curta
-   git push origin --delete tipo/descricao-curta
-   ```
+```bash
+git switch main
+git pull upstream main
+git push origin main
+git branch -d tipo/descricao-curta
+git push origin --delete tipo/descricao-curta
+```
 
 Para sincronizar o fork posteriormente, estando na branch `main`, execute:
 
