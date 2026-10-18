@@ -330,3 +330,5 @@ Enquanto desenvolve, o adk web continua sendo o melhor lugar para ver transferê
 - Adicione variáveis de ambiente que permite trocar as portas caso esteja em uso, documente isso e exiba mensagens de erro durante a execuçao do programa, agentes e makefile que permite identificar a causa raiz com mais facilidade
 - Adicione o TOC - Table of Content no início de cada arquivo .md e registre isso no CLAUDE.md
 - Adicione na documentação diagramas mermaid explicando o funcionamento da arquitetura, fluxo de trabalho da API e dos agentes, testes, classes e o que mais for necessario para um iniciante. Use analogias para facilitar o entendimento. A criação e atualização dos diagramas e conteúdo da doc com analogias deve estar registrado no CLAUDE.md
+- Ajuste o script que gera o TOC para ser idepotente não repetir table of content em arquivos que já existe e o TOC deve ser compativel com plugins de Markdown que geram TOC, ou seja colocar sumário entre duas tags <!-- TOC -->. Usar <!-- /TOC --> está entrando em conflito com plugins
+- Ajuste o script que gera TOC para listar o # para ficar igual ao plugin.
