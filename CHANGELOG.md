@@ -4,16 +4,46 @@
 **Sumário**
 
 - [Changelog](#changelog)
-  - [0.1.0 - 2026-10-17](#010---2026-10-17)
-    - [Adicionado](#adicionado)
+  - [\[0.2.1\] - 2026-10-20](#021---2026-10-20)
     - [Alterado](#alterado)
     - [Corrigido](#corrigido)
+  - [\[0.2.0\] - 2026-10-20](#020---2026-10-20)
+    - [Alterado](#alterado-1)
+  - [\[0.1.0\] - 2026-10-17](#010---2026-10-17)
+    - [Adicionado](#adicionado)
+    - [Alterado](#alterado-2)
+    - [Corrigido](#corrigido-1)
 
 <!-- TOC -->
 
 Todas as mudanças relevantes do projeto são registradas aqui.
 
 O formato segue o [Keep a Changelog 1.1.0](https://keepachangelog.com/pt-BR/1.1.0/), e o projeto usa [Versionamento Semântico 2.0.0](https://semver.org/lang/pt-BR/). A versão vem do arquivo [VERSION](VERSION).
+
+## [0.2.1] - 2026-10-20
+
+### Alterado
+
+- Prometheus `v3.13.4` → `v3.15.0` e Grafana `13.0.1` → `13.2.4` no `docker-compose.yml`. Pelas notas de versão, nada incompatível com a configuração do projeto: o Prometheus 3.15 deprecia `--log.level` e o 3.14 o parâmetro `stats` da API de consulta, que o projeto não usa; o Grafana 13.2 desliga por padrão os *scripted dashboards*, que o projeto também não usa (os dashboards são provisionados por arquivo).
+- Requisitos do Ubuntu unificados em `docs/requirements/REQUIREMENTS-ubuntu.md` (antes um arquivo por versão: `-22.04.md`, `-24.04.md` e `-26.04.md`). As diferenças entre 22.04, 24.04 e 26.04 (codinome, Python do sistema, pacotes conflitantes, AppArmor, repositório apt da Docker) ficam numa tabela e numa subseção por versão. `make check-os` e `make requirements` apontam para o arquivo único em qualquer Ubuntu suportado.
+
+### Corrigido
+
+- Os requisitos do Ubuntu mandavam remover os pacotes conflitantes no "passo 3.1", mas a remoção fica no passo 3.2.
+- `make toc` quebrava com `FileNotFoundError` quando um `.md` tinha sido apagado mas a remoção ainda não estava no índice do Git. Agora esses arquivos são ignorados.
+- `make check-diagrams` informava `[ OK ] 0 diagramas Mermaid válidos` quando a extração dos diagramas falhava. Agora ignora arquivos apagados e falha com `[ERRO]` se a extração quebrar.
+
+## [0.2.0] - 2026-10-20
+
+### Alterado
+
+- Python 3.12.15 → 3.14.8:
+  - `mise.toml` e `.python-version` fixados em 3.14.8;
+  - imagens base do `Dockerfile` `python:3.12.15-slim-trixie` → `python:3.14.8-slim-trixie`;
+  - `requires-python` passa de `>=3.12` para `>=3.14` e o Ruff usa `target-version = "py314"`; o `uv.lock` foi refeito sem atualizar nenhum pacote (só saíram as marcas e wheels de Python < 3.14);
+  - código ajustado pelo Ruff para a sintaxe do 3.14 (`except A, B:` da PEP 758 e `AsyncGenerator[T]` sem o segundo parâmetro);
+  - README, `REQUIREMENTS.md`, arquivos de requisitos por sistema (revisão de 2026-10-20), `PLAN.md`, `CLAUDE.md` atualizados.
+- Ambientes locais com `.venv` em Python 3.12 são recriados automaticamente pelo `make install` (`uv sync`).
 
 ## [0.1.0] - 2026-10-17
 
@@ -68,7 +98,3 @@ O formato segue o [Keep a Changelog 1.1.0](https://keepachangelog.com/pt-BR/1.1.
 ### Corrigido
 
 - `make test-unit` e `make test-integration` falhavam com `ModuleNotFoundError: No module named 'aurora'` quando o `.venv` tinha sido criado em outro caminho (o shebang de `pytest` apontava para um Python inexistente). Os alvos agora usam `uv run python -m pytest`, e o `make install` recria um `.venv` de outro caminho.
-
-
-[Unreleased]: https://github.com/aeciopires/mba-ia-desafio-criacao-agente/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/aeciopires/mba-ia-desafio-criacao-agente/releases/tag/v0.1.0

@@ -83,7 +83,7 @@ Explicação detalhada de cada garantia e dos testes que as cobrem: [docs/garant
 
 - Ubuntu 22.04, 24.04 ou 26.04, ou macOS (Intel ou Apple Silicon). Veja o passo a passo do seu sistema em [REQUIREMENTS.md](REQUIREMENTS.md).
 - Docker Engine com Compose v2 e Buildx (no macOS, via Colima), `make`, `git` e `curl`.
-- [mise](https://mise.jdx.dev), que instala Python 3.12, uv e jq (`make install` faz isso no seu usuário).
+- [mise](https://mise.jdx.dev), que instala Python 3.14, uv e jq (`make install` faz isso no seu usuário).
 - Uma chave do [Google AI Studio](https://aistudio.google.com/apikey).
 
 ```bash

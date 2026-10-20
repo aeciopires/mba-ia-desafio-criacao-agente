@@ -1,11 +1,14 @@
-# Requisitos — Ubuntu 22.04 LTS (Jammy Jellyfish)
+# Requisitos — Ubuntu 22.04, 24.04 e 26.04 LTS
 
 <!-- TOC -->
 **Sumário**
 
-- [Requisitos — Ubuntu 22.04 LTS (Jammy Jellyfish)](#requisitos--ubuntu-2204-lts-jammy-jellyfish)
+- [Requisitos — Ubuntu 22.04, 24.04 e 26.04 LTS](#requisitos--ubuntu-2204-2404-e-2604-lts)
   - [1. Caminho rápido (recomendado)](#1-caminho-rápido-recomendado)
-  - [2. Particularidades do Ubuntu 22.04](#2-particularidades-do-ubuntu-2204)
+  - [2. Diferenças entre as versões](#2-diferenças-entre-as-versões)
+    - [2.1 Ubuntu 22.04](#21-ubuntu-2204)
+    - [2.2 Ubuntu 24.04](#22-ubuntu-2404)
+    - [2.3 Ubuntu 26.04](#23-ubuntu-2604)
   - [3. Instalação manual (instruções oficiais)](#3-instalação-manual-instruções-oficiais)
     - [3.1 Pacotes base](#31-pacotes-base)
     - [3.2 Docker Engine, Compose v2 e Buildx](#32-docker-engine-compose-v2-e-buildx)
@@ -19,7 +22,9 @@
 
 <!-- TOC -->
 
-Arquiteturas suportadas: **amd64** (x86_64) e **arm64** (aarch64). Última revisão: 2026-10-17.
+Este arquivo vale para as três versões LTS suportadas: **22.04**, **24.04** e **26.04**. Os passos são os mesmos em todas; o que muda de uma versão para outra está na seção 2 e em notas marcadas com a versão.
+
+Arquiteturas suportadas: **amd64** (x86_64) e **arm64** (aarch64). Última revisão: 2026-10-20.
 
 ## 1. Caminho rápido (recomendado)
 
@@ -31,11 +36,34 @@ make install               # instala o mise (no seu usuário), as ferramentas do
 
 O `make install` **não** instala o Docker nem pacotes do sistema (isso exige `sudo`). Para esses, siga a seção 3.
 
-## 2. Particularidades do Ubuntu 22.04
+## 2. Diferenças entre as versões
 
-- O Ubuntu 22.04 traz pacotes antigos (`docker.io`, `docker-compose`, `podman-docker`, `containerd`, `runc`) que conflitam com o Docker oficial. Remova-os antes, como mostra o passo 3.1.
-- O Python do sistema é 3.10; o projeto usa o Python 3.12 instalado pelo mise. Não é preciso mexer no Python do sistema.
+Para saber qual é a sua versão: `lsb_release -ds` (ou `make check-os`).
+
+| | Ubuntu 22.04 LTS | Ubuntu 24.04 LTS | Ubuntu 26.04 LTS |
+|---|---|---|---|
+| Codinome (usado pelo repositório apt da Docker) | `jammy` (Jammy Jellyfish) | `noble` (Noble Numbat) | `resolute` (Resolute Raccoon) |
+| Python do sistema (não usado pelo projeto) | 3.10 | 3.12 | — |
+| Pacotes antigos que conflitam com o Docker oficial | `docker.io`, `docker-compose` (v1), `podman-docker`, `containerd`, `runc` | `docker.io`, `docker-compose-v2`, `podman-docker`... | os mesmos da 24.04 |
+
+Em todas as versões:
+
+- o projeto usa o Python 3.14 fixado no `mise.toml`, e não o Python do sistema; não é preciso mexer nele;
+- os pacotes conflitantes são removidos no passo 3.2 (o comando cobre a lista das três versões);
+- o codinome é lido do `/etc/os-release` no passo 3.2, então os comandos são os mesmos.
+
+### 2.1 Ubuntu 22.04
+
+- Os pacotes da versão são antigos, e é comum ter `docker.io` ou o `docker-compose` v1 instalados pelo apt. Remova-os antes de instalar o Docker oficial (passo 3.2).
 - O `jq` do apt (1.6) funciona, mas o projeto usa o `jq` fixado no `mise.toml`.
+
+### 2.2 Ubuntu 24.04
+
+- O AppArmor vem ativo; o Docker oficial já traz o perfil necessário, sem configuração extra.
+
+### 2.3 Ubuntu 26.04
+
+- A Docker publica oficialmente o repositório apt para o Ubuntu Resolute 26.04 (LTS) (conferido na página oficial em 2026-10-17). Se o `apt update` não achar o repositório, confira de novo a lista de versões suportadas em <https://docs.docker.com/engine/install/ubuntu/#os-requirements>.
 
 ## 3. Instalação manual (instruções oficiais)
 
@@ -70,7 +98,7 @@ Signed-By: /etc/apt/keyrings/docker.asc
 EOF
 sudo apt update
 
-# Pacotes (o codinome deste sistema é `jammy`)
+# Pacotes (codinome: jammy no 22.04, noble no 24.04, resolute no 26.04)
 sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo systemctl status docker      # se estiver parado: sudo systemctl start docker
 ```
@@ -119,12 +147,12 @@ uv sync               # dependências Python (uv.lock)
 
 | Software | Versão fixada / testada | Onde é definida |
 |---|---|---|
-| Python | 3.12.15 | `mise.toml` (imagem: `python:3.12.15-slim-trixie`) |
+| Python | 3.14.8 | `mise.toml` (imagem: `python:3.14.8-slim-trixie`) |
 | uv | 0.12.24 | `mise.toml` (imagem: `ghcr.io/astral-sh/uv:0.12.24`) |
 | jq | 1.8.1 | `mise.toml` |
 | Google ADK | 2.11.0 | `pyproject.toml` / `uv.lock` |
-| Prometheus | v3.13.4 | `docker-compose.yml` |
-| Grafana | 13.0.1 | `docker-compose.yml` |
+| Prometheus | v3.15.0 | `docker-compose.yml` |
+| Grafana | 13.2.4 | `docker-compose.yml` |
 | Docker Engine | 29.x (testado com 29.9.1) | sistema operacional |
 | Docker Compose | v2 plugin (testado com v5.6.0) | sistema operacional |
 | Docker Buildx | testado com v0.38.0 | sistema operacional |

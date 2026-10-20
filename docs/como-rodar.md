@@ -20,9 +20,7 @@ Siga o arquivo do seu sistema, indicado em [REQUIREMENTS.md](../REQUIREMENTS.md)
 
 | Sistema | Arquivo |
 |---|---|
-| Ubuntu 22.04 | [requirements/REQUIREMENTS-ubuntu-22.04.md](requirements/REQUIREMENTS-ubuntu-22.04.md) |
-| Ubuntu 24.04 | [requirements/REQUIREMENTS-ubuntu-24.04.md](requirements/REQUIREMENTS-ubuntu-24.04.md) |
-| Ubuntu 26.04 | [requirements/REQUIREMENTS-ubuntu-26.04.md](requirements/REQUIREMENTS-ubuntu-26.04.md) |
+| Ubuntu 22.04, 24.04 e 26.04 | [requirements/REQUIREMENTS-ubuntu.md](requirements/REQUIREMENTS-ubuntu.md) (diferenças entre as versões na seção 2) |
 | macOS (Intel e Apple Silicon) | [requirements/REQUIREMENTS-macos.md](requirements/REQUIREMENTS-macos.md) |
 
 ```bash

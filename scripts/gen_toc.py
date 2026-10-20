@@ -41,9 +41,10 @@ def markdown_files() -> list[Path]:
             text=True,
             check=True,
         ).stdout.split()
-    except (OSError, subprocess.CalledProcessError):
+    except OSError, subprocess.CalledProcessError:
         out = [str(p.relative_to(ROOT)) for p in ROOT.rglob("*.md")]
-    return sorted(ROOT / f for f in out if not f.startswith(EXCLUDED_DIRS))
+    # Files deleted from the working tree but still in the index are skipped.
+    return sorted(ROOT / f for f in out if not f.startswith(EXCLUDED_DIRS) and (ROOT / f).is_file())
 
 
 def slugify(text: str) -> str:

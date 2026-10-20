@@ -19,16 +19,14 @@ Sem `make`: `cat /etc/os-release && uname -m` (Ubuntu) ou `sw_vers && uname -m` 
 
 | Sistema | Arquiteturas | Arquivo |
 |---|---|---|
-| Ubuntu 22.04 LTS | amd64, arm64 | [docs/requirements/REQUIREMENTS-ubuntu-22.04.md](docs/requirements/REQUIREMENTS-ubuntu-22.04.md) |
-| Ubuntu 24.04 LTS | amd64, arm64 | [docs/requirements/REQUIREMENTS-ubuntu-24.04.md](docs/requirements/REQUIREMENTS-ubuntu-24.04.md) |
-| Ubuntu 26.04 LTS | amd64, arm64 | [docs/requirements/REQUIREMENTS-ubuntu-26.04.md](docs/requirements/REQUIREMENTS-ubuntu-26.04.md) |
+| Ubuntu 22.04, 24.04 e 26.04 LTS | amd64, arm64 | [docs/requirements/REQUIREMENTS-ubuntu.md](docs/requirements/REQUIREMENTS-ubuntu.md) (um arquivo só, com as diferenças de cada versão na seção 2) |
 | macOS | Intel (amd64), Apple Silicon (arm64) | [docs/requirements/REQUIREMENTS-macos.md](docs/requirements/REQUIREMENTS-macos.md) |
 
 ## O que é necessário
 
 - **Docker Engine** com **Docker Compose v2** e **Buildx**. No macOS, o runtime é o **Colima** com o Docker CLI.
 - `make`, `git` e `curl`.
-- **mise**, que instala no seu usuário as versões fixadas em [mise.toml](mise.toml): Python 3.12, uv e jq.
+- **mise**, que instala no seu usuário as versões fixadas em [mise.toml](mise.toml): Python 3.14, uv e jq.
 - Uma chave do Google AI Studio.
 
 Sistemas fora da tabela não são suportados. `make check-os` falha neles; `SKIP_OS_CHECK=1` força a execução por sua conta e risco.

@@ -25,7 +25,7 @@ requirements_file() {
         . /etc/os-release
         for v in $SUPPORTED_UBUNTU; do
           if [ "${ID:-}" = "ubuntu" ] && [ "${VERSION_ID:-}" = "$v" ]; then
-            echo "docs/requirements/REQUIREMENTS-ubuntu-$v.md"
+            echo "docs/requirements/REQUIREMENTS-ubuntu.md"
             return
           fi
         done

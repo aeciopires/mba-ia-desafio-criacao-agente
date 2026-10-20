@@ -3,7 +3,7 @@
   "info": {
     "title": "Residencial Aurora API",
     "description": "\nAPI do assistente virtual do **Residencial Aurora** (Google ADK + Gemini).\n\nFluxo típico:\n1. `POST /sessoes` com o apartamento do morador → `session_id`.\n2. `POST /sessoes/{session_id}/mensagens` com o texto do morador.\n3. Se `confirmacoes_pendentes` não vier vazia, responda em `POST /sessoes/{session_id}/confirmacoes`.\n4. Confira os efeitos nas rotas de **Verificação**, que leem o banco direto, sem o modelo.\n\nCenários prontos: `docs/cenarios-de-teste.md`.\n",
-    "version": "0.1.0"
+    "version": "0.2.1"
   },
   "paths": {
     "/sessoes": {

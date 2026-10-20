@@ -4,7 +4,7 @@ dynamic = ["version"]
 description = "Residencial Aurora virtual assistant built with Google ADK and exposed through a FastAPI API."
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "google-adk[db]==2.11.0",
     "fastapi==0.141.1",
@@ -43,7 +43,7 @@ markers = [
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py314"
 src = ["src", "tests"]
 
 [tool.ruff.lint]

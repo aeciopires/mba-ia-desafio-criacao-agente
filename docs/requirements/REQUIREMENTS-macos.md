@@ -19,7 +19,7 @@
 
 <!-- TOC -->
 
-Arquiteturas suportadas: **amd64** (Intel) e **arm64** (Apple Silicon). O runtime de containers é o **[Colima](https://github.com/abiosoft/colima)**, uma VM Linux com Docker Engine, usada com o Docker CLI, o Compose e o Buildx. Última revisão: 2026-10-17.
+Arquiteturas suportadas: **amd64** (Intel) e **arm64** (Apple Silicon). O runtime de containers é o **[Colima](https://github.com/abiosoft/colima)**, uma VM Linux com Docker Engine, usada com o Docker CLI, o Compose e o Buildx. Última revisão: 2026-10-20.
 
 ## 1. Caminho rápido (recomendado)
 
@@ -116,12 +116,12 @@ uv sync
 
 | Software | Versão fixada / testada | Onde é definida |
 |---|---|---|
-| Python | 3.12.15 | `mise.toml` (imagem: `python:3.12.15-slim-trixie`) |
+| Python | 3.14.8 | `mise.toml` (imagem: `python:3.14.8-slim-trixie`) |
 | uv | 0.12.24 | `mise.toml` (imagem: `ghcr.io/astral-sh/uv:0.12.24`) |
 | jq | 1.8.1 | `mise.toml` |
 | Google ADK | 2.11.0 | `pyproject.toml` / `uv.lock` |
-| Prometheus | v3.13.4 | `docker-compose.yml` |
-| Grafana | 13.0.1 | `docker-compose.yml` |
+| Prometheus | v3.15.0 | `docker-compose.yml` |
+| Grafana | 13.2.4 | `docker-compose.yml` |
 | Colima | versão estável do Homebrew | Homebrew |
 | Docker CLI, Compose e Buildx | versões estáveis do Homebrew (Compose v2 ou mais novo) | Homebrew |
 

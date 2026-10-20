@@ -233,9 +233,7 @@ Objetivo: permitir rodar os cenários de teste pelo navegador, sem montar `curl`
 ├── REQUIREMENTS.md              # genérico: redireciona para o arquivo do seu sistema (seção 12.2)
 ├── docs/
 │   ├── requirements/            # requisitos por sistema operacional (seção 12.3)
-│   │   ├── REQUIREMENTS-ubuntu-22.04.md
-│   │   ├── REQUIREMENTS-ubuntu-24.04.md
-│   │   ├── REQUIREMENTS-ubuntu-26.04.md
+│   │   ├── REQUIREMENTS-ubuntu.md   # 22.04, 24.04 e 26.04 num arquivo só
 │   │   └── REQUIREMENTS-macos.md
 │   ├── arquitetura.md
 │   ├── garantias.md
@@ -311,7 +309,7 @@ Objetivo: permitir rodar os cenários de teste pelo navegador, sem montar `curl`
 - A lista de sistemas suportados fica numa variável do Makefile (`SUPPORTED_UBUNTU := 22.04 24.04 26.04`) e é repetida no README e em `docs/como-rodar.md`.
 
 ### mise (`mise.toml`)
-- `python = "3.12"`, `uv = "<versão fixa>"` e `jq = "<versão fixa>"` (usado pelos scripts de teste com `curl`). Docker e Docker Compose **não** via mise: README, `REQUIREMENTS.md` e os arquivos por sistema (seção 12) apontam para https://docs.docker.com/engine/install/ e https://docs.docker.com/compose/install/.
+- `python = "3.14"`, `uv = "<versão fixa>"` e `jq = "<versão fixa>"` (usado pelos scripts de teste com `curl`). Docker e Docker Compose **não** via mise: README, `REQUIREMENTS.md` e os arquivos por sistema (seção 12) apontam para https://docs.docker.com/engine/install/ e https://docs.docker.com/compose/install/.
 
 ### Makefile (alvos)
 | Alvo | Ação |
@@ -337,7 +335,7 @@ Objetivo: permitir rodar os cenários de teste pelo navegador, sem montar `curl`
 | `preflight` (interno) | `check-os` + `check-env` + `check-ports` antes do `up`. |
 
 ### Docker
-- `Dockerfile` multi-stage com a imagem oficial do uv (`ghcr.io/astral-sh/uv`) + `python:3.12-slim`; `uv sync --frozen --no-dev`; usuário não-root com UID/GID configuráveis para o bind mount `./var`.
+- `Dockerfile` multi-stage com a imagem oficial do uv (`ghcr.io/astral-sh/uv`) + `python:3.14-slim`; `uv sync --frozen --no-dev`; usuário não-root com UID/GID configuráveis para o bind mount `./var`.
 - **Multi-arquitetura:** base e dependências precisam ter builds para `linux/amd64` e `linux/arm64` (todas as imagens oficiais usadas têm). O `Dockerfile` não fixa plataforma e usa `TARGETPLATFORM`/`TARGETARCH` do buildx quando necessário. Prometheus e Grafana usam imagens oficiais multi-arquitetura com tag de versão fixa.
 - **Compatibilidade com os sistemas suportados:** as imagens são Linux. No Ubuntu rodam direto no Docker Engine; no macOS rodam no Docker Engine dentro da VM Linux do [Colima](https://github.com/abiosoft/colima), que usa a arquitetura nativa do processador (`linux/amd64` no Intel, `linux/arm64` no Apple Silicon). O Docker CLI, o Compose e o Buildx são os mesmos binários usados com qualquer Docker Engine, apontando para o contexto `colima`. Não há imagem por versão do Ubuntu: a mesma imagem serve aos três, e a validação é feita rodando `make check-os`, `make build` e `make test-unit` em cada sistema da tabela (máquinas ou runners de CI com Ubuntu 22.04/24.04/26.04 e macOS Intel/Apple Silicon).
 - **Versão:** `ARG AURORA_VERSION` + label `org.opencontainers.image.version` e cópia do arquivo `VERSION` para a imagem.
@@ -531,7 +529,7 @@ Arquivo `CLAUDE.md` na raiz, versionado, criado na Fase 0 e mantido em todas as 
    - Atualizar dependências por iniciativa própria (ver item 8).
 3. **Convenções**
    - Código, comentários, nomes e mensagens de commit em en-US. Documentação (README e `docs/`) em pt-BR.
-   - Python ≥ 3.12 gerenciado por uv. Ferramentas via `mise.toml`. Docker e Docker Compose instalados pelo sistema operacional.
+   - Python 3.14 (≥ 3.12 exigido pelo `TASK.md`) gerenciado por uv. Ferramentas via `mise.toml`. Docker e Docker Compose instalados pelo sistema operacional.
    - Estrutura de pastas conforme a seção 6 deste plano.
 4. **Regras de sincronização (manter tudo consistente)**
    - Mudou uma garantia (arquivo, função ou trecho)? Atualize a seção **Garantias** do README e `docs/garantias.md`. Os ponteiros arquivo:trecho precisam existir.
@@ -543,7 +541,7 @@ Arquivo `CLAUDE.md` na raiz, versionado, criado na Fase 0 e mantido em todas as 
    - Mudou uma fase ou decisão do plano? Atualize o `PLAN.md`.
    - Toda mudança visível (funcionalidade, correção, rota, variável, alvo do Makefile, decisão de arquitetura)? Registre em `## [Unreleased]` no `CHANGELOG.md` (seção 11).
    - Nova versão do projeto? Edite só o `VERSION` e transforme `[Unreleased]` na seção da versão no `CHANGELOG.md`.
-   - Mudou a lista de sistemas suportados? Atualize `SUPPORTED_UBUNTU`/`check-os` no Makefile, README e `docs/como-rodar.md`; crie ou remova o `docs/requirements/REQUIREMENTS-<so>.md` correspondente e atualize a tabela do `REQUIREMENTS.md` genérico.
+   - Mudou a lista de sistemas suportados? Atualize `SUPPORTED_UBUNTU`/`check-os` no Makefile, README e `docs/como-rodar.md`; adicione ou remova a versão na seção de diferenças do `docs/requirements/REQUIREMENTS-ubuntu.md` (ou crie/remova o arquivo de outro sistema) e atualize a tabela do `REQUIREMENTS.md` genérico.
    - Nova dependência de sistema ou ferramenta? Inclua-a em `make check-dependencies`, no `REQUIREMENTS.md` genérico e em **todos** os arquivos por sistema, com o link oficial de instalação.
    - Mudou fluxo de contribuição, testes obrigatórios ou guardrails? Atualize o `CONTRIBUTING.md` junto com este arquivo.
 5. **Definição de pronto para qualquer mudança**
@@ -559,7 +557,7 @@ Arquivo `CLAUDE.md` na raiz, versionado, criado na Fase 0 e mantido em todas as 
      - pacotes Python em `pyproject.toml` e `uv.lock` (`uv lock --upgrade` e, depois, fixar as versões exatas);
      - ferramentas no `mise.toml` (Python, uv e demais);
      - versões de referência do Colima, Docker CLI, Compose e Buildx no macOS (instalados via Homebrew, fora do mise), e flags recomendadas do `colima start`;
-     - imagens base do `Dockerfile` (uv e `python:3.12-slim` ou série mais nova suportada);
+     - imagens base do `Dockerfile` (uv e `python:3.14-slim` ou série mais nova suportada);
      - imagens do Prometheus e do Grafana no `docker-compose.yml`;
      - versões de actions de CI, se houver;
      - **arquivos de requisitos**: `REQUIREMENTS.md` genérico e todos os `docs/requirements/REQUIREMENTS-<so>.md`.
@@ -644,16 +642,16 @@ Ponto de entrada curto, que só redireciona:
 
   | Sistema | Arquiteturas | Arquivo |
   |---|---|---|
-  | Ubuntu 22.04 LTS | amd64, arm64 | [docs/requirements/REQUIREMENTS-ubuntu-22.04.md](docs/requirements/REQUIREMENTS-ubuntu-22.04.md) |
-  | Ubuntu 24.04 LTS | amd64, arm64 | [docs/requirements/REQUIREMENTS-ubuntu-24.04.md](docs/requirements/REQUIREMENTS-ubuntu-24.04.md) |
-  | Ubuntu 26.04 LTS | amd64, arm64 | [docs/requirements/REQUIREMENTS-ubuntu-26.04.md](docs/requirements/REQUIREMENTS-ubuntu-26.04.md) |
+  | Ubuntu 22.04, 24.04 e 26.04 LTS | amd64, arm64 | [docs/requirements/REQUIREMENTS-ubuntu.md](docs/requirements/REQUIREMENTS-ubuntu.md) (um arquivo só, com as diferenças de cada versão na seção 2) |
   | macOS | Intel (amd64), Apple Silicon (arm64) | [docs/requirements/REQUIREMENTS-macos.md](docs/requirements/REQUIREMENTS-macos.md) |
 
 - Lista resumida do que é necessário (Docker Engine no Ubuntu ou Colima + Docker CLI no macOS, Docker Compose v2, Buildx, make, git, curl, mise; via mise: Python, uv e jq) e aviso de que sistemas fora da tabela não são suportados.
 
 ### 12.3 Arquivos por sistema (`docs/requirements/REQUIREMENTS-<so>.md`)
 
-Estrutura comum a todos:
+Há dois arquivos: `REQUIREMENTS-ubuntu.md`, único para as versões em `SUPPORTED_UBUNTU` (os passos são os mesmos; o codinome do repositório apt é lido do `/etc/os-release`), e `REQUIREMENTS-macos.md`. O arquivo do Ubuntu concentra o que muda entre as versões numa seção própria (tabela comparativa + uma subseção por versão).
+
+Estrutura comum aos dois:
 
 1. **Sistema e arquiteturas suportadas.**
 2. **Caminho rápido (recomendado), via Makefile:**
@@ -676,10 +674,10 @@ Estrutura comum a todos:
    | Python, uv, jq | `mise install`, com as versões do `mise.toml` (doc do uv: <https://docs.astral.sh/uv/getting-started/installation/>) | Igual |
    | Dependências Python do projeto | `uv sync` | Igual |
 
-   Particularidades por arquivo:
+   Particularidades (no arquivo do Ubuntu, uma subseção por versão):
    - **Ubuntu 22.04:** versão do kernel/cgroups e pacotes antigos que precisam ser removidos antes do Docker oficial (`docker.io`, `podman-docker`…), conforme a página oficial.
    - **Ubuntu 24.04:** observações da página oficial, como AppArmor e repositório `noble`.
-   - **Ubuntu 26.04:** confirmar na página oficial da Docker se o codinome já tem repositório apt; se não tiver, registrar a alternativa oficial indicada e o status no arquivo e no `CHANGELOG.md`.
+   - **Ubuntu 26.04:** confirmar na página oficial da Docker se o codinome já tem repositório apt; se não tiver, registrar a alternativa oficial indicada e o status na subseção da versão e no `CHANGELOG.md`.
    - **macOS:**
      - pré-requisito: [Homebrew](https://brew.sh/), o método de instalação indicado no README do Colima;
      - CPU, memória e disco recomendados para a VM do Colima (`colima start --cpu/--memory/--disk`, ou `colima template` para deixar fixo);
@@ -692,10 +690,10 @@ Estrutura comum a todos:
 6. **Problemas comuns:** permissão no socket do Docker, `Cannot connect to the Docker daemon` no macOS (Colima parado ou contexto errado), `docker compose` não encontrado (plugin fora de `cliPluginsExtraDirs`), `mise` fora do `PATH`, porta 8000/3000/9090 ocupada, permissão do bind mount `./var`.
 
 ### 12.4 Integração com o Makefile
-- `make check-os` termina imprimindo `Consulte: docs/requirements/REQUIREMENTS-<so>.md` para o sistema detectado.
+- `make check-os` termina imprimindo `Consulte: docs/requirements/REQUIREMENTS-<so>.md` para o sistema detectado (`REQUIREMENTS-ubuntu.md` em qualquer Ubuntu suportado).
 - `make check-dependencies`, ao achar uma dependência faltando, mostra a URL oficial e o caminho do arquivo de requisitos do sistema.
 - `make requirements` imprime o caminho do arquivo adequado (e tenta abri-lo).
-- Um teste unitário confere que existe um arquivo de requisitos para cada sistema em `SUPPORTED_UBUNTU` e para o macOS, e que todos estão listados no `REQUIREMENTS.md` genérico.
+- Um teste unitário confere que existem o arquivo do Ubuntu (citando cada versão de `SUPPORTED_UBUNTU`) e o do macOS, e que os dois estão listados no `REQUIREMENTS.md` genérico.
 
 ---
 
@@ -752,7 +750,7 @@ Estrutura comum a todos:
 - [ ] `make build-multiarch` gera imagens `linux/amd64` e `linux/arm64`, e o projeto sobe nos sistemas suportados.
 - [ ] `CLAUDE.md` contém as instruções para atualizar dependências só quando houver pedido explícito, incluindo a manutenção dos arquivos de requisitos.
 - [ ] `CONTRIBUTING.md` com preparação do ambiente, fluxo de trabalho, testes obrigatórios e checklist de PR, coerente com o `CLAUDE.md`.
-- [ ] `REQUIREMENTS.md` genérico redireciona para `REQUIREMENTS-ubuntu-22.04.md`, `-24.04.md`, `-26.04.md` e `REQUIREMENTS-macos.md`; cada um tem o caminho via Makefile, a instalação manual com links oficiais e as versões de referência.
+- [ ] `REQUIREMENTS.md` genérico redireciona para `REQUIREMENTS-ubuntu.md` (22.04, 24.04 e 26.04, com as diferenças de cada versão destacadas) e `REQUIREMENTS-macos.md`; cada um tem o caminho via Makefile, a instalação manual com links oficiais e as versões de referência.
 - [ ] `CHANGELOG.md` no formato Keep a Changelog, com todas as mudanças registradas e a versão `1.0.0` fechada.
 - [ ] Portas trocáveis por `API_PORT`, `PROMETHEUS_PORT` e `GRAFANA_PORT`, com detecção de porta em uso e documentação.
 - [ ] Erros do Makefile, da API e dos agentes mostram a causa raiz e o que fazer.

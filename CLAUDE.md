@@ -42,7 +42,7 @@ Contrato de trabalho para agentes de código (e pessoas) que alteram este reposi
 ## 3. Convenções
 
 - Código, comentários, nomes e mensagens de commit em **en-US**. Documentação (README, `docs/`, `CHANGELOG.md`, `CONTRIBUTING.md`, `REQUIREMENTS*.md`) em **pt-BR**.
-- Python ≥ 3.12 gerenciado por uv (`pyproject.toml` + `uv.lock`). Ferramentas via `mise.toml`. Docker, Docker Compose e Colima vêm do sistema operacional.
+- Python 3.14 (`requires-python >= 3.14`; o `TASK.md` exige ≥ 3.12) gerenciado por uv (`pyproject.toml` + `uv.lock`). Ferramentas via `mise.toml`. Docker, Docker Compose e Colima vêm do sistema operacional.
 - Estrutura:
   - `src/aurora/{api,agents,tools,db,regulamento}`
   - `tests/{unit,integration}`
@@ -77,8 +77,8 @@ Contrato de trabalho para agentes de código (e pessoas) que alteram este reposi
 | Qualquer título (`##`/`###`) ou arquivo `.md` novo | `make toc` (o teste `test_markdown_tocs_are_current` e o `make lint` falham se o sumário estiver desatualizado) |
 | Qualquer coisa visível (funcionalidade, correção, rota, variável, alvo, decisão) | Entrada em `## [Unreleased]` no `CHANGELOG.md` |
 | A versão do projeto | Só o `VERSION`; transforme `[Unreleased]` na seção da versão no `CHANGELOG.md` |
-| A lista de sistemas suportados | `SUPPORTED_UBUNTU` no Makefile e em `scripts/lib.sh`, `scripts/check-os.sh`, README, `docs/como-rodar.md`, o `docs/requirements/REQUIREMENTS-<so>.md` correspondente e a tabela do `REQUIREMENTS.md` |
-| Uma dependência de sistema ou ferramenta | `scripts/check-deps.sh`, `REQUIREMENTS.md` e **todos** os `docs/requirements/REQUIREMENTS-<so>.md`, com o link oficial |
+| A lista de sistemas suportados | `SUPPORTED_UBUNTU` no Makefile e em `scripts/lib.sh`, `scripts/check-os.sh`, README, `docs/como-rodar.md`, a seção de diferenças entre versões do `docs/requirements/REQUIREMENTS-ubuntu.md` (ou o `REQUIREMENTS-<so>.md` de outro sistema) e a tabela do `REQUIREMENTS.md` |
+| Uma dependência de sistema ou ferramenta | `scripts/check-deps.sh`, `REQUIREMENTS.md` e **todos** os `docs/requirements/REQUIREMENTS-<so>.md` (`-ubuntu.md` e `-macos.md`), com o link oficial |
 | Portas ou serviços do compose | `scripts/check-ports.sh`, `.env.example`, README e `docs/como-rodar.md` |
 | O fluxo de contribuição, testes obrigatórios ou guardrails | `CONTRIBUTING.md` junto com este arquivo |
 
@@ -108,7 +108,7 @@ Contrato de trabalho para agentes de código (e pessoas) que alteram este reposi
 - **Escopo:**
   - pacotes Python em `pyproject.toml` e `uv.lock` (`uv lock --upgrade` e depois fixar versões exatas no `pyproject.toml`);
   - ferramentas no `mise.toml` (Python, uv, jq);
-  - imagens base do `Dockerfile` (`ghcr.io/astral-sh/uv`, `python:3.12.x-slim-*`);
+  - imagens base do `Dockerfile` (`ghcr.io/astral-sh/uv`, `python:3.14.x-slim-*`);
   - imagens do Prometheus e do Grafana no `docker-compose.yml`;
   - versões de referência do Colima, Docker CLI, Compose e Buildx no macOS (Homebrew, fora do mise) e flags recomendadas do `colima start`;
   - modelos Gemini padrão em `src/aurora/config.py`, se a pessoa pedir;
@@ -127,7 +127,7 @@ Contrato de trabalho para agentes de código (e pessoas) que alteram este reposi
   - garantir que os passos manuais e o `make check-dependencies`/`make install` continuam equivalentes;
   - revisar o `CONTRIBUTING.md` se a preparação do ambiente mudar.
 - **Fontes:** só oficiais (PyPI, releases do projeto, Docker Hub/GHCR oficial, documentação oficial). Leia as notas de versão e registre mudanças incompatíveis.
-- **Restrições do `TASK.md` que continuam valendo:** Google ADK na série 2, ≥ 2.2.0, versão exata fixada; Python ≥ 3.12; Docker e Docker Compose fora do mise.
+- **Restrições do `TASK.md` que continuam valendo:** Google ADK na série 2, ≥ 2.2.0, versão exata fixada; Python ≥ 3.12 (o projeto usa a série 3.14); Docker e Docker Compose fora do mise.
 - **Sempre fixe versões exatas.** Nada de `latest`, `^` ou `~` em imagens e ferramentas.
 - **Validação obrigatória:** `make check-dependencies`, `make build`, `make build-multiarch`, `make test-unit`, `make test-integration` (inclui reinício e disputa) e `make smoke`.
 - **Registro:**

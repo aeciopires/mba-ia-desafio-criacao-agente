@@ -40,11 +40,16 @@ def version_not_hardcoded(text: str) -> bool:
 
 def test_requirements_file_per_supported_os():
     generic = _read("REQUIREMENTS.md")
-    files = [f"docs/requirements/REQUIREMENTS-ubuntu-{v}.md" for v in SUPPORTED_UBUNTU]
-    files.append("docs/requirements/REQUIREMENTS-macos.md")
-    for path in files:
+    ubuntu = "docs/requirements/REQUIREMENTS-ubuntu.md"
+    for path in (ubuntu, "docs/requirements/REQUIREMENTS-macos.md"):
         assert (ROOT / path).is_file(), path
         assert path in generic, f"{path} missing from REQUIREMENTS.md"
+    ubuntu_text = _read(ubuntu)
+    for v in SUPPORTED_UBUNTU:
+        heading = rf"^### 2\.\d+ Ubuntu {re.escape(v)}$"
+        assert re.search(heading, ubuntu_text, re.MULTILINE), (
+            f"Ubuntu {v} section missing from {ubuntu}"
+        )
     assert f"SUPPORTED_UBUNTU := {' '.join(SUPPORTED_UBUNTU)}" in _read("Makefile")
 
 

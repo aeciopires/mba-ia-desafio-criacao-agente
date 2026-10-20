@@ -12,14 +12,15 @@ trap 'rm -rf "$work"' EXIT
 
 command -v docker >/dev/null 2>&1 || { err "docker não encontrado (necessário para validar os diagramas)."; hint "make check-dependencies"; exit 1; }
 
-python3 - "$work" <<'PY'
+python3 - "$work" <<'PY' || { err "Falha ao extrair os diagramas dos arquivos .md."; hint "Veja o erro do Python acima."; exit 1; }
 import pathlib, re, subprocess, sys
 out = pathlib.Path(sys.argv[1])
 files = subprocess.run(["git", "ls-files", "--cached", "--others", "--exclude-standard", "*.md"],
                        capture_output=True, text=True).stdout.split()
 index = []
 for f in files:
-    if f.startswith("dados/"):
+    # Skip protected data and files deleted but still in the git index.
+    if f.startswith("dados/") or not pathlib.Path(f).is_file():
         continue
     text = pathlib.Path(f).read_text(encoding="utf-8")
     for n, block in enumerate(re.findall(r"```mermaid\n(.*?)```", text, re.S), 1):

@@ -62,7 +62,7 @@ class FakeLlm(BaseLlm):
 
     async def generate_content_async(
         self, llm_request: LlmRequest, stream: bool = False
-    ) -> AsyncGenerator[LlmResponse, None]:
+    ) -> AsyncGenerator[LlmResponse]:
         text = _last_user_text(llm_request)
         low = text.lower()
         responses = _function_responses(llm_request)

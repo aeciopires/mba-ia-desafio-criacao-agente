@@ -3,7 +3,7 @@
 
 FROM ghcr.io/astral-sh/uv:0.12.24 AS uv
 
-FROM python:3.12.15-slim-trixie AS builder
+FROM python:3.14.8-slim-trixie AS builder
 COPY --from=uv /uv /usr/local/bin/uv
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
@@ -18,7 +18,7 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
-FROM python:3.12.15-slim-trixie AS runtime
+FROM python:3.14.8-slim-trixie AS runtime
 ARG AURORA_VERSION=0.0.0
 ARG UID=1000
 ARG GID=1000
